@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <% include dependence.ejs %>
+    <link rel='stylesheet' href='/stylesheets/register.css' />
+    <script src="/javascripts/register.js"></script>
+</head>
+<body>
+<div class="wrapper">
+    <div class="icon">
+        <a href="/"><img src="/images/iconfont-chat.png" alt="logo"/></a>
+    </div>
+    <div class="inputBox">
+        <input class="account" type="text" placeholder="用户名" name="account"/>
+        <input class="password" type="password" placeholder="密码" name="password"/>
+        <input type="password" class="password_repeat" placeholder="重复密码" name="password_repeat"/>
+        <span class="notice"></span>
+    </div>
+    <div class="btnGroup">
+        <button class="register">注册</button>
+    </div>
+</div>
+</body>
+</html>

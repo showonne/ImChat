@@ -1,0 +1,44 @@
+@import "compass/css3";
+
+$unit: 750/10rem;
+
+body{
+  background-image: url('/images/bgImg2.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+  @include display-flex;
+  @include align-items(center);
+  @include justify-content(center);
+}
+.logon{
+  margin-top: 120/$unit;
+  @include display-flex;
+  @include flex-direction(column);
+  @include align-items(center);
+  //@include justify-content(center);
+  padding: 40/$unit 60/$unit ;
+  @include border-radius(8px);
+  background-color: hsla(0, 0%, 100%, .3);
+  h4{
+    color: #fff;
+  }
+
+  &::before{
+    z-index: -1;
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    @include filter(blur(10px));
+  }
+  input{
+    margin-top: 20px;
+    width: 160/$unit;
+  }
+  button{
+    margin-top: 20px;
+    width: 160/$unit;
+  }
+}

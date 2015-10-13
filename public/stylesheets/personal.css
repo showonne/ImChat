@@ -1,0 +1,68 @@
+/* line 5, ../sass/personal.scss */
+html, body {
+  height: 100%;
+  width: 100%;
+}
+
+/* line 10, ../sass/personal.scss */
+.header {
+  position: fixed;
+  width: 100%;
+  height: 0.8rem;
+  background-color: #00b3ee;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  align-items: center;
+  color: #fff;
+}
+/* line 19, ../sass/personal.scss */
+.header .return {
+  display: block;
+  font-size: 40px;
+  color: #fff;
+  cursor: pointer;
+  position: absolute;
+  left: 0.13333rem;
+  top: 20%;
+  text-decoration: none;
+}
+
+/* line 30, ../sass/personal.scss */
+.container {
+  padding-top: 0.8rem;
+  padding-bottom: 30px;
+}
+/* line 33, ../sass/personal.scss */
+.container .row {
+  margin-top: 40px;
+}
+
+/* line 38, ../sass/personal.scss */
+.title {
+  border-bottom: 1px solid #000;
+  padding-bottom: 10px;
+}
+
+/* line 43, ../sass/personal.scss */
+.photo {
+  height: 50px;
+  width: 50px;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+}
+
+/* line 60, ../sass/personal.scss */
+#editName, #editEmail {
+  width: 40%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}

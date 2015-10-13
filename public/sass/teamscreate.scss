@@ -1,0 +1,63 @@
+@import "compass/css3";
+
+$unit: 750/10rem;
+
+html,body{
+  height: 100%;
+  width: 100%;
+}
+body{
+  background-image: url('/images/cteam.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.container{
+  @include display-flex;
+  @include flex-direction(column);
+  @include align-items(center);
+
+  .logo{
+    margin-top: 40/$unit;
+  }
+  .contentBox{
+    margin-top: 10/$unit;
+    background-color: #fff;
+    overflow: hidden;
+    border: 1px solid rgb(217, 217, 217);
+    @include border-radius(4px);
+    width: 320/$unit;
+    height: 220/$unit;
+    @include display-flex;
+    @include flex-direction(column);
+    @include align-items(center);
+
+    .header{
+      width: 100%;
+      height: 44/$unit;
+      background-color: #4CBEF6;
+      color: #fff;
+      text-align: center;
+    }
+    .add{
+      @include display-flex;
+      @include flex-direction(column);
+      @include align-items(center);
+      width: 100%;
+
+      input{
+        height: 40/$unit;
+        width: 280/$unit;
+        margin-top: 20/$unit;
+        font-size: 30px;
+      }
+      button{
+        display: block;
+        height: 40/$unit;
+        width: 280/$unit;
+        margin-top: 30/$unit;
+        font-size: 30px;
+      }
+    }
+  }
+}

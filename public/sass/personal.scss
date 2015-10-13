@@ -1,0 +1,67 @@
+@import "compass/css3";
+
+$unit: 750/10rem;
+
+html, body{
+  height: 100%;
+  width: 100%;
+}
+
+.header{
+  position: fixed;
+  width: 100%;
+  height: 60/$unit;
+  background-color: #00b3ee;
+  @include display-flex;
+  @include justify-content(center);
+  @include align-items(center);
+  color :#fff;
+  .return{
+    display: block;
+    font-size: 40px;
+    color: #fff;
+    cursor: pointer;
+    position: absolute;
+    left: 10/$unit;
+    top: 20%;
+    text-decoration: none;
+  }
+}
+.container{
+  padding-top: 60/$unit;
+  padding-bottom: 30px;
+  .row{
+    margin-top: 40px;
+  }
+}
+
+.title{
+  border-bottom: 1px solid #000;
+  padding-bottom: 10px;
+}
+
+.photo{
+  height: 50px;
+  width: 50px;
+  @include border-radius(50%);
+}
+
+//.photoPreviewCon{
+//  max-height: 300px;
+//  max-width: 400px;
+//  border: 1px solid #000;
+//  overflow: hidden;
+//}
+//.photoPreview{
+//  height: 300px;
+//  width: 400px;
+//}
+
+#editName, #editEmail{
+  width: 40%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  @include translate(-50%, -50%);
+}
+

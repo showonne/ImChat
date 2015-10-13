@@ -1,0 +1,17 @@
+{
+  "name": "graPro",
+  "version": "0.0.0",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "iscroll": "~5.1.3",
+    "Jcrop": "jcrop#~2.0.2",
+    "jquery": "~2.1.4"
+  }
+}

@@ -1,0 +1,54 @@
+/* line 5, ../sass/invate.scss */
+body {
+  background-image: url("/images/bgImg2.jpg");
+  background-size: cover;
+  background-attachment: fixed;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
+/* line 13, ../sass/invate.scss */
+.logon {
+  margin-top: 1.6rem;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  align-items: center;
+  padding: 0.53333rem 0.8rem;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+/* line 22, ../sass/invate.scss */
+.logon h4 {
+  color: #fff;
+}
+/* line 26, ../sass/invate.scss */
+.logon::before {
+  z-index: -1;
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  -webkit-filter: blur(10px);
+  filter: blur(10px);
+}
+/* line 36, ../sass/invate.scss */
+.logon input {
+  margin-top: 20px;
+  width: 2.13333rem;
+}
+/* line 40, ../sass/invate.scss */
+.logon button {
+  margin-top: 20px;
+  width: 2.13333rem;
+}

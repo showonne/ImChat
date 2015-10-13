@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>个人中心</title>
+    <% include dependence.ejs %>
+    <link rel="stylesheet" href="/Jcrop/css/Jcrop.min.css"/>
+    <link rel='stylesheet' href='/stylesheets/personal.css' />
+    <script src="/javascripts/personal.js"></script>
+    <!--<script src="/Jcrop/js/Jcrop.min.js"></script>-->
+</head>
+<body>
+    <div class="header">
+        <a class="return">⬅️</a>
+        <h3>个人中心</h3>
+    </div>
+    <div class="container">
+        <div class="row">
+            <h4 class="title">个人资料</h4>
+        </div>
+        <!--<div class="row">-->
+            <!--<div class="col-md-2 col-md-offset-2">头像</div>-->
+            <!--<div class="col-md-4">-->
+                <!--<div class="photo">-->
+                    <!--<img src="/images/showonne.jpg" alt="" class="photo"/>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="col-md-2">-->
+                <!--<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editPhoto">编辑</button>-->
+            <!--</div>-->
+        <!--</div>-->
+        <div class="row">
+            <div class="col-md-2 col-md-offset-2">昵称</div>
+            <div class="col-md-4 nickname">
+                <%= account.nickname %>
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editName">编辑</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2 col-md-offset-2">电子邮箱</div>
+            <div class="col-md-4 email">
+                <%= account.email %>
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editEmail">编辑</button>
+            </div>
+        </div>
+        <div class="row">
+            <h4 class="title">我的团队</h4>
+        </div>
+        <% teams.forEach(function(item){ %>
+            <div class="row" id="<%= item.id %>">
+                <div class="col-md-3 col-md-offset-2">
+                    <%= item.teamname %>
+                </div>
+                <div class="col-md-2 com-md-offset-1">
+                    <button class="btn btn-danger leave" data-toggle="modal" data-target="#leave" data-teamid="<%= item.id %>">退出</button>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+    <!-- 模态框 -->
+    <div id="editName" class="modal fade" tabindex="-1" role="dialog">
+        <dia class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4>修改昵称</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <input type="text" class="form-control nicknameInput" value="<%= account.nickname %>"/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary subName">确定</button>
+                </div>
+            </div>
+        </dia>
+    </div>
+    <div id="editEmail" class="modal fade" tabindex="-1" role="dialog">
+        <dia class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4>修改邮箱</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <input type="text" class="form-control emailInput" value="<%= account.email %>"/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary subEmail">确定</button>
+                </div>
+            </div>
+        </dia>
+    </div>
+    <div id="leave" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>确认提示</h4>
+                </div>
+                <div class="modal-body">
+                    <h4>你真的要退出当前团队?</h4>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-danger leaveBtn">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

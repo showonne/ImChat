@@ -1,0 +1,109 @@
+@import "compass/css3";
+@import "compass/reset";
+
+$unit: 750/10rem;
+
+html, body{
+  height: 100%;
+  width: 100%;
+  @include display-flex;
+  @include align-items(center);
+  @include justify-content(center);
+}
+
+body{
+  background-image: url('/images/bgImg2.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.wrapper{
+  @include display-flex;
+  @include flex-direction(column);
+  @include align-items(center);
+  //@include justify-content(center);
+  position: relative;
+  height: 260 / $unit;
+  width: 300 / $unit;
+  @include border-radius(8px);
+  background-color: hsla(0, 0%, 100%, .3);
+
+  &::before{
+    z-index: -1;
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    @include filter(blur(10px));
+  }
+  .icon{
+    img{
+      display: inline-block;
+      margin: 0 auto;
+    }
+  }
+  .inputBox{
+    @include display-flex;
+    @include flex-direction(column);
+    @include align-items(center);
+    input{
+      outline: none;
+      border: none;
+      border-bottom: 1px solid #fff;
+      background-color: inherit;
+      font-size: 20px;
+      color: #fff;
+      &::-webkit-input-placeholder{
+        color: #fff;
+      }
+    }
+    .account{
+      width: 200/$unit;
+      height: 20/$unit;
+    }
+    .notice{
+      display: block;
+      width: 200/$unit;
+      height: 15/$unit;
+      font-size: 14px;
+      line-height: 1.7;
+      color: red;
+      margin-top: 5/$unit;
+    }
+    .password{
+      width: 200/$unit;
+      height: 20/$unit;
+      margin-top: 15/$unit;
+    }
+    .password_repeat{
+      width: 200/$unit;
+      height: 20/$unit;
+      margin-top: 15/$unit;
+    }
+  }
+  .btnGroup{
+    padding-top: -20px;
+
+    button{
+      position: relative;
+      top: -20/$unit;
+      background-color: rgb(3, 169, 244);
+      outline: none;
+      border: 1px solid rgb(3, 169, 244);
+      @include border-radius(4px);
+      color: #fff;
+      font-size: 20px;
+      height: 30/$unit;
+      width: 150/$unit;
+      @include transition-property(all);
+      @include transition-duration(.25s);
+    }
+    .register{
+      &:hover{
+        padding-left: 20/$unit;
+      }
+    }
+  }
+}
