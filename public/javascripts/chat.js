@@ -148,7 +148,7 @@ $(function(){
                     }else{
                         console.log('unknow error');
                     }
-                })
+                });
             }
             fr.readAsDataURL(file);
         }else{
@@ -156,13 +156,13 @@ $(function(){
         }
         console.log(file);
 
-    })
+    });
 
     $(".emojiItem").click(function(){
         var mean = "<{" + $(this).data("mean") + "}>";
         $input.insertContent(mean);
         $(".emojiBox").toggle();
-    })
+    });
     //进行私聊的相关操作
     var $privateChat = $(".privateChat");
     //将团队中的人添加到私聊列表中
@@ -198,7 +198,7 @@ function getChatRecord(teamid, to){
         }else{
             alert('unknow error...');
         }
-    })
+    });
 }
 
 function getPrivateChatRecord(to){
@@ -280,7 +280,7 @@ function addToMessageBox(nickname, msg){
     realMsg = realMsg.replace(/\[-(\w+\.\w+)-\]/g, function(match){
         console.log(match);
         return "<img src='/upload/" + match.slice(2, -2) + "' class='imageMsg'>";
-    })
+    });
     realMsg = marked(realMsg);
     var $mediaItem = $("<div class='media'>" +
                             "<div class='media-left media-top'>" +
@@ -318,6 +318,6 @@ function addToMessageBox(nickname, msg){
                 this.focus();
             }
         }
-    })
+    });
 })(jQuery);
 

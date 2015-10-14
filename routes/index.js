@@ -8,12 +8,12 @@ var privateChat = require('../models/privateChatModel');
 var fs = require('fs');
 
 router.get('/', checkNotLogin);
-router.get('/', function(req, res, next) {
+router.get('/', function(req, res) {
   res.render('index', { title: '主页' });
 });
 
 router.post('/logon', checkNotLogin);
-router.post('/logon', function(req, res, next){
+router.post('/logon', function(req, res){
   Account.find({account: req.body.account}, function(err, account){
     if(err){
       console.log(err);
@@ -44,16 +44,16 @@ router.post('/logon', function(req, res, next){
         }
       }
     }
-  })
+  });
 });
 
 router.get('/regsiter', checkNotLogin);
-router.get('/register',function(req, res, next){
+router.get('/register',function(req, res){
   res.render('register', {title: '注册'});
 });
 
 router.post('/regsiter', checkNotLogin);
-router.post('/register',function(req, res, next){
+router.post('/register',function(req, res){
   Account.find({account: req.body.account}, function(err, account){
     if(err){
       console.log(err);
@@ -77,16 +77,16 @@ router.post('/register',function(req, res, next){
 });
 
 router.get('/setting/teams/create', checkLogin);
-router.get('/setting/teams/create', function(req, res, next){
+router.get('/setting/teams/create', function(req, res){
   console.log(req.session.account);
   res.render('teamscreate',{});
 });
 
 router.post('/setting/teams/create', checkLogin);
-router.post('/setting/teams/create', function(req, res, next){
+router.post('/setting/teams/create', function(req, res){
   var id = makeId();
   var n_team = new Team({id: id, teamname: req.body.teamname, members: [req.session.account.id]});
-  n_team.save(function(err, nteam){
+  n_team.save(function(err){
     if(err){
       console.log(err);
     }else{
@@ -112,9 +112,7 @@ router.post('/setting/teams/create', function(req, res, next){
 
 //聊天界面,最主要的界面
 router.get('/team/:teamid', checkLogin);
-router.get('/team/:teamid', function(req, res, next){
-  var teamid = req.params.teamid;
-
+router.get('/team/:teamid', function(req, res){
   var eq = new EventProxy();
   eq.all('getAccount', 'getCurrentTeam', function(account, team){
 
@@ -149,7 +147,7 @@ router.get('/team/:teamid', function(req, res, next){
 });
 
 router.get('/setting/personal', checkLogin);
-router.get('/setting/personal', function(req, res, next){
+router.get('/setting/personal', function(req, res){
   console.log(req.session.account);
   Account.find({account: req.session.account.account}, function(err, account){
     if(err){
@@ -164,14 +162,13 @@ router.get('/setting/personal', function(req, res, next){
             teams: teams
           });
         }
-      })
+      });
     }
   });
 });
 
 router.post('/setting/personal', checkLogin);
-router.post('/setting/personal', function(req, res, next){
-  console.log(req.body);
+router.post('/setting/personal', function(req, res){
   Account.update({account: req.session.account.account},{nickname: req.body.nickname, email: req.body.email},
       function(err){
         if(err){
@@ -184,11 +181,11 @@ router.post('/setting/personal', function(req, res, next){
             account: req.session.account
           });
         }
-  })
+  });
 });
 
 // ---------------------
-router.get('/team/:teamid/invate', function(req, res, next){
+router.get('/team/:teamid/invate', function(req, res){
   if(req.session.account){
     console.log(req.session.account);
   }else{
@@ -196,7 +193,7 @@ router.get('/team/:teamid/invate', function(req, res, next){
   }
 });
 //----------------------
-router.post('/team/:teamid/invate', function(req, res, next){
+router.post('/team/:teamid/invate', function(req, res){
   Team.find({id: req.params.teamid}, function(err, team){
     if(err){
       console.log(err);
@@ -214,7 +211,7 @@ router.post('/team/:teamid/invate', function(req, res, next){
               var ep = new EventProxy();
               ep.all('updateAccount', 'updateTeam', function(){
                 req.session.account = account[0];
-                res.json({success: 1, redirecturl: '/team/' + team[0].id})
+                res.json({success: 1, redirecturl: '/team/' + team[0].id});
               });
 
               Account.update({account: req.body.account}, {$push: {teams: team[0].id}}, function(err){
@@ -230,17 +227,17 @@ router.post('/team/:teamid/invate', function(req, res, next){
                 }else{
                   ep.emit('updateTeam');
                 }
-              })
+              });
             }
           }
         }
-      })
+      });
     }
-  })
+  });
 });
 
 //
-router.post('/leave', function(req, res, next){
+router.post('/leave', function(req, res){
   var ep = new EventProxy();
   ep.all('updateAccount', 'updateTeam', function(){
     console.log("succeed");
@@ -269,7 +266,7 @@ router.post('/leave', function(req, res, next){
 });
 
 //获取聊天记录
-router.post('/getrecord', function(req, res, next){
+router.post('/getrecord', function(req, res){
   chatRecord.find({id: req.body.teamid, to: req.body.to}, function(err, records){
     if(err){
       console.log(err);
@@ -290,7 +287,7 @@ router.post('/getrecord', function(req, res, next){
   });
 });
 
-router.post('/getrecord/private', function(req, res, next){
+router.post('/getrecord/private', function(req, res){
   privateChat.find({members: {$all: [req.body.to, req.session.account.id]}}, function(err, records){
     if(err){
       console.log(err);
@@ -305,13 +302,13 @@ router.post('/getrecord/private', function(req, res, next){
           }else{
             res.json({success: 1, chatrecord: {members: [], recordList: []}});
           }
-        })
+        });
       }
     }
-  })
+  });
 });
 
-router.post('/chating', function(req, res, next){
+router.post('/chating', function(req, res){
   chatRecord.update({id: req.body.teamid, to: req.body.to}, {$push: {recordList: {nickname: req.body.nickname, msg: req.body.msg}}}, function(err, result){
     if(err){
       console.log(err);
@@ -325,7 +322,7 @@ router.post('/chating', function(req, res, next){
   });
 });
 
-router.post('/chating/private', function(req, res, next){
+router.post('/chating/private', function(req, res){
   privateChat.update({members: {$all: [req.body.to, req.session.account.id]}},
       {$push: {recordList: {nickname: req.body.nickname, msg: req.body.msg}}},
       function(err, result){
@@ -341,14 +338,14 @@ router.post('/chating/private', function(req, res, next){
     });
 });
 
-router.post('/upload', function(req, res, next){
+router.post('/upload', function(req, res){
   console.log(req.body);
   console.log(req.files.file.name);
   res.json({success: 1, imgsrc: req.files.file.name});
 });
 
 router.get('/logour', checkLogin);
-router.get('/logout', function(req, res, next){
+router.get('/logout', function(req, res){
   req.session = null;
   res.redirect('/');
 });
@@ -368,7 +365,7 @@ function getTeamsByAccount(account){
 
 function getMembersByTeam(team){
   var members =[];
-  team.members.forEach(function(item, index){
+  team.members.forEach(function(item){
     Account.find({id: item}, function(err, accountinfo){
       if(err){
         console.log(err);

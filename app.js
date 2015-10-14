@@ -33,7 +33,7 @@ app.use(session({
 
 app.use(multer({
   dest: './public/upload'
-}))
+}));
 
 app.use('/', routes);
 app.use('/users', users);

@@ -33,11 +33,10 @@ $(function(){
             }
         }).done(function(res){
             if(res.success == 1){
-                alert(res.success + "&&" + teamid);
                 $("#" + teamid).remove();
                 $("#leave").modal('toggle');
             }else{
-                alert("unknow error...");
+                console.log("unknow error...");
             }
         });
     });

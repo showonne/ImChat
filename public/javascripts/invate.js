@@ -12,7 +12,7 @@ $(function(){
          }
       }).done(function(res){
          if(res.success == 0){
-            alert(res.msg);
+            console.log(res.msg);
          }else{
             window.location.href = res.redirecturl;
          }

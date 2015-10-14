@@ -30,8 +30,7 @@ $(function(){
 
     $(".register").click(function(){
         var account = $(".account").val(),
-            password = $(".password").val(),
-            password_repeat = $(".password_repeat");
+            password = $(".password").val();
 
         if(account && password && isLegal) {
             $.ajax({

@@ -15,7 +15,7 @@ Team.Clear = function(){
                 console.log("no empty teams :)");
             }
         }
-    })
+    });
 }
 
 module.exports = Team;

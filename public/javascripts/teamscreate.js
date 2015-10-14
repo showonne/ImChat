@@ -1,5 +1,5 @@
 $(function(){
-    $(".submit").click(function(e){
+    $(".submit").click(function(){
         $.ajax({
             url: '/setting/teams/create',
             type: 'POST',

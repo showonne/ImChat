@@ -5,7 +5,7 @@
     var h = null;
     window.addEventListener("resize",function(){
         clearTimeout(h);
-        h = setTimeout(setUnit, 300)
+        h = setTimeout(setUnit, 300);
     }, false);
     setUnit();
 })(window);
