@@ -1,5 +1,4 @@
 @import "compass/css3";
-//@import "compass/reset";
 $unit: 750/10rem;
 
 html,body{
@@ -204,9 +203,8 @@ ul{
     @include flex(590);
     height: 100%;
     .header{
-      height: 10%;
       padding-top: 10/$unit;
-      padding-bottom: 10/$unit;
+      padding-bottom: 1/$unit;
       @include box-sizing(border-box);
       @include box-shadow(0 -2px 4px 0 rgba(0,0,0,.1));
       border-bottom: 1px solid #000;
@@ -224,16 +222,22 @@ ul{
         font-weight: 800;
         padding-left: 150/$unit;
       }
+      .todoToggle{
+        float: right;
+        height: 30px;
+        width: 34px;
+        margin-right: 20px;
+        img{
+          max-width: 100%;
+        }
+      }
     }
     #iscroll{
       position: relative;
       overflow: scroll;
       height: 65%;
-      width: 590/$unit;
+      width: 70%;
       padding: 10px 6px;
-      //.messageBox{
-      //  overflow: hidden;
-      //}
     }
     .inputBox{
       position: absolute;
@@ -414,4 +418,72 @@ ul{
 .imageMsg{
   height: 200px;
   width: 200px;
+}
+
+.chatBox{
+  @include display-flex;
+  @include flex-direction(row);
+}
+
+.todoBox{
+  transform: translate(400px, 0);
+  padding-left: 6%;
+  width: 30%;
+  height: 270/$unit;
+  overflow: scroll;
+  transition: all .25s ease;
+  border-left: 1px solid #ccc;
+  .todoHeader{
+    margin-bottom: 10px;
+  }
+  ul{
+    list-style: none;
+  }
+  li{
+    display: block;
+    height: 30px;
+    margin: 4px 0;
+  }
+}
+
+.todoItem{
+  height: 100%;
+}
+input[type="checkbox"]{
+  position: absolute;
+  clip: rect(0, 0, 0, 0);
+}
+input[type="checkbox"] + label{
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+  font-size: 16px;
+  line-height: 1.5;
+}
+input[type="checkbox"]:checked + label{
+  text-decoration: line-through;
+  color: #C0C0C0;
+}
+input[type="checkbox"] + label::before{
+  position: absolute;
+  top: 50%;
+  transform: translate(-120%, -50%);
+  font-size: 16px;
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+  content: '\a0'; /* non-break space */
+  display: inline-block;
+  margin-right: .2em;
+  border-radius: 50%;
+  background: #1976D2;
+
+}
+input[type="checkbox"]:checked + label::before{
+  color: #000;
+  line-height: .6;
+  text-align: right;
+  font-size: 20px;
+  content: '\2713';
+  background: silver;
 }

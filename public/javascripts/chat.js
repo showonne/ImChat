@@ -76,7 +76,7 @@ $(function(){
     });
     //接收消息功能(群聊)
     socket.on('replyMsg', function(data){
-        addToMessageBox(data.nickname, data.msg);
+        addToMessageBox(data.from, data.nickname, data.msg);
         var increasement = $(".messageBox>:last").height(),
             initialScroll = $("#iscroll").scrollTop();
         $("#iscroll").scrollTop(initialScroll + increasement + 15);
@@ -85,7 +85,7 @@ $(function(){
     socket.on('replyPriMsg', function(data){
         if(isContain(data.from)){
             if(currentPrivateChatId ==  data.from){
-                addToMessageBox(data.nickname, data.msg);
+                addToMessageBox(data.from, data.nickname, data.msg);
                 var increasement = $(".messageBox>:last").height(),
                     initialScroll = $("#iscroll").scrollTop();
                 $("#iscroll").scrollTop(initialScroll + increasement + 15);
@@ -182,6 +182,46 @@ $(function(){
     //初始化群聊信息记录
     getChatRecord(currentteam, 'all');
 
+    var vm = new Vue({
+        el: ".todoBox",
+        data: {
+            todos: [{id: '11223',task: '学习Js', done: false}, {id: '22334', task: '接着学Js', done: false}]
+        },
+        computed: {
+            lefts: function(){
+                return this.todos.filter(function(e){
+                    return !e.done
+                }).length;
+            }
+        },
+        methods: {
+            addTodo: function(e){
+                var id = Math.floor(Math.random() * 100000).toString() + new Date().getTime().toString();
+                console.log(e.target.value);
+                this.todos.push({id: id,task: e.target.value, done: false});
+                e.target.value = "";
+            },
+            delTodo: function(todo){
+                this.todos.$remove(todo);
+            },
+            delCompleted: function(){
+                this.todos = this.todos.filter(function(todo){
+                    return !todo.done;
+                })
+            }
+        }
+    });
+
+    var isTodoShow = false;
+    $(".todoToggle").click(function(){
+        if(isTodoShow){
+            $(".todoBox").css("transform", "translate(400px, 0)");
+            isTodoShow = false;
+        }else{
+            $(".todoBox").css("transform", "translate(0, 0)");
+            isTodoShow = true;
+        }
+    })
 });
 
 function getChatRecord(teamid, to){
@@ -223,7 +263,7 @@ function getPrivateChatRecord(to){
 function initialMessageBox(record){
     $(".messageBox").empty();
     for(var i = 0; i < record.recordList.length; i++){
-        addToMessageBox(record.recordList[i].nickname, record.recordList[i].msg);
+        addToMessageBox(record.recordList[i].id, record.recordList[i].nickname, record.recordList[i].msg);
     }
     $("#iscroll").scrollTop(99999);
 }
@@ -271,7 +311,7 @@ function createPrivateChatItem(text, id) {
     $(".chatList").append(item);
 }
 
-function addToMessageBox(nickname, msg){
+function addToMessageBox(id, nickname, msg){
     var $messageBox = $(".messageBox");
     var photo = nickname.slice(0, 1);
     var realMsg = msg.replace(/<{([a-z]+)}>/g, function(match){
@@ -284,7 +324,7 @@ function addToMessageBox(nickname, msg){
     realMsg = marked(realMsg);
     var $mediaItem = $("<div class='media'>" +
                             "<div class='media-left media-top'>" +
-                                "<span class='otherphoto'>" + photo + "</span>" +
+                                "<span class='otherphoto' data-userid='" + id + "'>" + photo + "</span>" +
                             "</div>" +
                             "<div class='media-body'>" +
                                 "<h4 class='media-heading'>" + nickname + "</h4>" +

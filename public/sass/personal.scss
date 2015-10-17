@@ -18,13 +18,16 @@ html, body{
   color :#fff;
   .return{
     display: block;
-    font-size: 40px;
-    color: #fff;
+    height: 40px;
+    width: 40px;
     cursor: pointer;
     position: absolute;
     left: 10/$unit;
-    top: 20%;
+    top: 33%;
     text-decoration: none;
+    img{
+      max-width: 100%;
+    }
   }
 }
 .container{
@@ -46,16 +49,6 @@ html, body{
   @include border-radius(50%);
 }
 
-//.photoPreviewCon{
-//  max-height: 300px;
-//  max-width: 400px;
-//  border: 1px solid #000;
-//  overflow: hidden;
-//}
-//.photoPreview{
-//  height: 300px;
-//  width: 400px;
-//}
 
 #editName, #editEmail{
   width: 40%;

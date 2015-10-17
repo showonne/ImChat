@@ -58,6 +58,9 @@ body{
       &::-webkit-input-placeholder{
         color: #fff;
       }
+      &:focus{
+        @include box-shadow(2px 1px 1px #ccc);
+      }
     }
     .account{
       width: 200/$unit;
@@ -84,26 +87,10 @@ body{
     }
   }
   .btnGroup{
-    padding-top: -20px;
-
-    button{
-      position: relative;
-      top: -20/$unit;
-      background-color: rgb(3, 169, 244);
-      outline: none;
-      border: 1px solid rgb(3, 169, 244);
-      @include border-radius(4px);
-      color: #fff;
-      font-size: 20px;
-      height: 30/$unit;
-      width: 150/$unit;
-      @include transition-property(all);
-      @include transition-duration(.25s);
-    }
+    padding-top: -40px;
     .register{
-      &:hover{
-        padding-left: 20/$unit;
-      }
+      height: 30/$unit;
+      width: 200/$unit;
     }
   }
 }

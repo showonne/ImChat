@@ -14,7 +14,16 @@ $(function(){
     });
 
     $(".return").click(function(){
-        window.location.href = document.referrer;
+        $.ajax({
+            type: 'GET',
+            url: '/redirect'
+        }).done(function(res){
+           if(res.success == 1){
+               window.location.href = res.redirecturl;
+           } else{
+               consle.log(res.msg);
+           }
+        });
     });
 
     var teamid = "";
@@ -57,6 +66,7 @@ function updateInfo(nickname, email, modal){
         }
     });
 }
+
 function updateData(data){
     $(".nickname").text(data.nickname);
     $(".email").text(data.email);

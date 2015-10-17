@@ -153,7 +153,7 @@ router.get('/setting/personal', function(req, res){
     if(err){
       console.log(err);
     }else{
-      Team.find({id: {$in: req.session.account.teams}}, function(err, teams){
+      Team.find({id: {$in: account[0].teams}}, function(err, teams){
         if(err){
           console.log(err);
         }else{
@@ -309,7 +309,7 @@ router.post('/getrecord/private', function(req, res){
 });
 
 router.post('/chating', function(req, res){
-  chatRecord.update({id: req.body.teamid, to: req.body.to}, {$push: {recordList: {nickname: req.body.nickname, msg: req.body.msg}}}, function(err, result){
+  chatRecord.update({id: req.body.teamid, to: req.body.to}, {$push: {recordList: {id: req.session.account.id, nickname: req.body.nickname, msg: req.body.msg}}}, function(err, result){
     if(err){
       console.log(err);
     }else{
@@ -346,8 +346,25 @@ router.post('/upload', function(req, res){
 
 router.get('/logour', checkLogin);
 router.get('/logout', function(req, res){
-  req.session = null;
+  req.session.account = null;
   res.redirect('/');
+});
+
+router.get('/redirect', checkLogin);
+router.get('/redirect', function(req, res){
+  Account.find({id: req.session.account.id}, function(err, accounts){
+    if(err){
+      console.log(err);
+    }else if(accounts.length <= 0){
+      res.json({success: 0, msg: 'no user info exists'});
+    }else{
+      if(accounts[0].teams.length == 0){
+        res.json({success: 1, redirecturl: '/setting/teams/create'});
+      }else{
+        res.json({success: 1, redirecturl: '/team/' + accounts[0].teams[0]});
+      }
+    }
+  });
 });
 
 function getTeamsByAccount(account){

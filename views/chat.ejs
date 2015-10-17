@@ -2,19 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Document</title>
+    <title>聊天</title>
     <% include dependence.ejs %>
     <link rel="stylesheet" href="/stylesheets/chat.css"/>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="/javascripts/vue.js"></script>
     <script src="/javascripts/chat.js"></script>
-    <script src="/iscroll/build/iscroll.js"></script>
     <script src="/javascripts/marked.js"></script>
 </head>
 <body>
     <div class="container1">
         <aside>
             <div class="teamManage">
-                <div class="teamBtn" data-toggle="modal" data-target="#teamList" data-teamid="<%= currentteam.id %>"><%= currentteam.teamname%>&nbsp;&nbsp;·</div>
+                <div class="teamBtn" data-toggle="modal" data-target="#teamList" data-teamid="<%= currentteam.id %>"><%= currentteam.teamname%>&nbsp;&nbsp;</div>
             </div>
             <div class="memberManage">
                 <div class="memberTitle">
@@ -47,9 +47,27 @@
             <div class="header">
                 <span class="returnGroupChat btn btn-default">返回群聊</span>
                 <span class="topicName">群聊</span>
+                <span class="todoToggle"><img src="/images/iconfont-listtodo.png"></span>
             </div>
-            <div id="iscroll">
-                <div class="messageBox">
+            <div class="chatBox">
+                <div id="iscroll">
+                    <div class="messageBox">
+                    </div>
+                </div>
+                <div class="todoBox">
+                    <div class="todoHeader">
+                        <h4 class="todoTitle">待办事项小记</h4>
+                        <button v-on="click: delCompleted" class="btn btn-primary">删除已完成任务</button>
+                    </div>
+                    <ul>
+                        <li v-repeat="todo in todos" v-on="click: done = !done">
+                            <div class="todoItem">
+                                <input type="checkbox" id="{{ todo.id }}" v-on="click: todo.done = !todo.done" />
+                                <label for="{{ todo.id }}" >{{ todo.task }}</label>
+                            </div>
+                        </li>
+                    </ul>
+                    <input class="newTodo" type="text" v-on="keydown: addTodo | key 13" placeholder="又有事情做了？">
                 </div>
             </div>
             <div class="inputBox">
@@ -70,9 +88,9 @@
                         <div class="teamtitle">我的团队</div>
                     </div>
                     <div class="modal-body">
-                        <ul>
+                        <ul class="list-group">
                             <% for(var i = 0; i < teamlist.length; i++){ %>
-                            <li class="teamitem"><a href="/team/<%= teamlist[i].id%>"><%= teamlist[i].teamname %></a></li>
+                            <li class="teamitem list-group-item"><a href="/team/<%= teamlist[i].id%>"><%= teamlist[i].teamname %></a></li>
                             <% } %>
                         </ul>
                     </div>
@@ -82,15 +100,6 @@
                 </div>
             </div>
         </div>
-        <div class="memberlist" style="display: none">
-            <div class="membertitle">其他成员<span id="memberClose">X</span></div>
-            <ul>
-                <% members.forEach(function(item){ %>
-                    <li class="memberitem"><a href="" data-userid="<%= item.id %>"><%= item.nickname %></a></li>
-                <% }) %>
-            </ul>
-        </div>
-        <div class="cover"></div>
         <div id="invate" class="modal fade" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
