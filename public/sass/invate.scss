@@ -38,7 +38,11 @@ body{
     width: 160/$unit;
   }
   button{
-    margin-top: 20px;
     width: 160/$unit;
+    margin-top: 10px;
   }
+}
+.notice{
+  color: red;
+  margin-top: 10px;
 }

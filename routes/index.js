@@ -7,6 +7,8 @@ var chatRecord = require('../models/chatRecordModel');
 var privateChat = require('../models/privateChatModel');
 var fs = require('fs');
 
+
+
 router.get('/', checkNotLogin);
 router.get('/', function(req, res) {
   res.render('index', { title: '主页' });
@@ -344,7 +346,7 @@ router.post('/upload', function(req, res){
   res.json({success: 1, imgsrc: req.files.file.name});
 });
 
-router.get('/logour', checkLogin);
+router.get('/logout', checkLogin);
 router.get('/logout', function(req, res){
   req.session.account = null;
   res.redirect('/');

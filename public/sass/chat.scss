@@ -227,6 +227,7 @@ ul{
         height: 30px;
         width: 34px;
         margin-right: 20px;
+        cursor: pointer;
         img{
           max-width: 100%;
         }
@@ -422,10 +423,11 @@ ul{
 
 .chatBox{
   @include display-flex;
-  @include flex-direction(row);
+  height: 380/$unit;
 }
 
 .todoBox{
+  position: absolute;
   transform: translate(400px, 0);
   padding-left: 6%;
   width: 30%;
