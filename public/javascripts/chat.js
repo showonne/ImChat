@@ -21,7 +21,7 @@ $(function(){
             var inputval = $input.val();
             if(currentPrivateChatId == 'all'){
                 $.ajax({
-                    url: '/chating',
+                    url: '/chating/public',
                     type: 'POST',
                     data: {
                         teamid: currentteam,
@@ -60,7 +60,7 @@ $(function(){
                             to: currentPrivateChatId,
                             msg: inputval
                         });
-                        addToMessageBox(currentaccountNickname, inputval);
+                        addToMessageBox(currentaccount, currentaccountNickname, inputval);
                         var increasement = $(".messageBox>:last").height(),
                             initialScroll = $("#iscroll").scrollTop();
                         $("#iscroll").scrollTop(initialScroll + increasement + 15);
@@ -105,7 +105,7 @@ $(function(){
     //添加
     $("#addTeamBtn").click(function(){
         $.ajax({
-            url: '/setting/teams/create',
+            url: '/team/create',
             type: 'POST',
             data: {
                 teamname: $("#n_teamname").val()
@@ -226,7 +226,7 @@ $(function(){
 
 function getChatRecord(teamid, to){
     $.ajax({
-        url: '/getrecord',
+        url: '/record/public',
         type: 'POST',
         data: {
             teamid: teamid,
@@ -243,7 +243,7 @@ function getChatRecord(teamid, to){
 
 function getPrivateChatRecord(to){
     $.ajax({
-        url: '/getrecord/private',
+        url: '/record/private',
         type: 'POST',
         data: {
             to: to

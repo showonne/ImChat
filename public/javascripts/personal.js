@@ -35,7 +35,7 @@ $(function(){
     $(".leaveBtn").click(function(){
         console.log(teamid);
         $.ajax({
-            url: '/leave',
+            url: '/team/leave',
             type: 'POST',
             data:{
                 teamid: teamid

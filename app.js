@@ -7,11 +7,13 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
+var teams = require('./routes/teams');
+var records = require('./routes/records');
+var chating = require('./routes/chating');
+
+
 var multer = require('multer');
 var app = express();
-
-var db = require('./db.js');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -36,7 +38,9 @@ app.use(multer({
 }));
 
 app.use('/', routes);
-app.use('/users', users);
+app.use('/record', records);
+app.use('/team', teams);
+app.use('/chating', chating);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -90,10 +94,17 @@ io.on('connection', function(socket){
       io.sockets.in(data.teamid).emit('replyMsg', data);
     }else{
       console.log(data.to);
-      socketArr[data.to].emit('replyPriMsg', data);
+      if(socketArr[data.to]){
+        socketArr[data.to].emit('replyPriMsg', data);
+      }else{
+        ;
+      }
     }
+  });
+
+  socket.on('disconnect', function(){
+    console.log("a user leaved...");
   });
 });
 
 
-//module.exports = app;

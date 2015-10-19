@@ -1,7 +1,7 @@
 $(function(){
     $(".submit").click(function(){
         $.ajax({
-            url: '/setting/teams/create',
+            url: '/team/create',
             type: 'POST',
             data: {
                 teamname: $("#teamname").val()
