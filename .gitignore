@@ -5,3 +5,5 @@ public/stylesheets/*
 public/jquery
 public/bootstrap
 public/upload
+.DS_Store
+.idea/*
