@@ -11,6 +11,7 @@ var teams = require('./routes/teams');
 var records = require('./routes/records');
 var chating = require('./routes/chating');
 
+var db = require('./db.js');
 
 var multer = require('multer');
 var app = express();
