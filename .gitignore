@@ -1,10 +1,14 @@
+# OS X
+.DS_Store*
+
+# npm
 node_modules
-learned.md
+
+# default
 setting.js
 public/stylesheets/*
 public/jquery
 public/bootstrap
 public/upload
-.DS_Store*
 .idea/*
 public/.sass-cache/
