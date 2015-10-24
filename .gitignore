@@ -7,3 +7,4 @@ public/bootstrap
 public/upload
 .DS_Store
 .idea/*
+public/.sass-cache/
