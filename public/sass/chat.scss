@@ -236,7 +236,7 @@ ul{
     #iscroll{
       position: relative;
       overflow: scroll;
-      height: 65%;
+      height: 61%;
       width: 70%;
       padding: 10px 6px;
     }
@@ -253,7 +253,6 @@ ul{
         width: 100%;
         @include display-flex;
         @include flex-direction(row);
-
         a{
           height: 20px;
           width: 20px;
@@ -277,7 +276,7 @@ ul{
       span{
         font-size: 14px;
         position: absolute;
-        top: 80/$unit;
+        top: 76/$unit;
         right: 0;
         margin-right: 10/$unit;
         color: #C1C1C1;

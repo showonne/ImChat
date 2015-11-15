@@ -44,7 +44,6 @@ router.get('/:teamid', function(req, res){
     eq.all('getAccount', 'getCurrentTeam', function(account, team){
 
         eq2 = new EventProxy();
-        console.log(team);
         eq2.all('getTeamsByAccount', 'getMembersByTeam', function(teamlist, members){
             console.log(members);
             res.render('chat', {
