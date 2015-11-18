@@ -5,6 +5,10 @@ $(function(){
     var currentaccount = $(".nickname").data('accountid'),
         currentaccountNickname = $(".nickname").text();
 
+    $(".memberTitle .title").click(function() {
+        $(".memberList").slideToggle('fast');
+    });
+
     socket.emit('join', {
         teamid: currentteam,
         accountid: currentaccount

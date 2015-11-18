@@ -1,14 +1,11 @@
-@import "compass/css3";
-@import "compass/reset";
-
 $unit: 750/10rem;
 
 html, body {
   height: 100%;
   width: 100%;
-  @include display-flex;
-  @include align-items(center);
-  @include justify-content(center);
+  display: flex;
+  align-items: center;;
+  justify-content: center;
 }
 body {
   background-image: url('/images/bgImg2.jpg');
@@ -17,16 +14,16 @@ body {
 }
 
 .wrapper{
-  @include display-flex;
-  @include flex-direction(column);
-  @include align-items(center);
+  display: flex;
+  flex-flow: column;
+  align-items: center;
   position: relative;
-  @include border-radius(8px);
+  border-radius: 8px;
   background-color: hsla(0, 0%, 100%, .3);
   .inputBox {
-    //@include display-flex;
-    //@include flex-direction(column);
-    //@include align-items(center);
+    //display: flex;
+    //flex-flow: column;
+    //align-items: center;
     form {
       position: relative;
     }
@@ -42,7 +39,7 @@ body {
         color: #fff;
       }
       &:focus {
-        @include box-shadow(2px 1px 1px #ccc);
+        box-shadow: 2px 1px 1px #ccc;
       }
     }
     .notice {
