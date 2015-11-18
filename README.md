@@ -18,4 +18,7 @@ module.exports = {
 
 ```
 
-2.`npm start`，`node app.js`。
+2.确定gulp，gulp-cli版本>= 3.9.0
+
+3.`gulp`。
+
