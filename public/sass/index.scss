@@ -1,95 +1,72 @@
-@import "compass/css3";
-@import "compass/reset";
-
 $unit: 750/10rem;
 
-html, body{
+html, body {
   height: 100%;
   width: 100%;
-  @include display-flex;
-  @include align-items(center);
-  @include justify-content(center);
+  display: flex;
+  align-items: center;;
+  justify-content: center;
 }
-
-body{
+body {
   background-image: url('/images/bgImg2.jpg');
   background-size: cover;
   background-attachment: fixed;
 }
 
 .wrapper{
-  @include display-flex;
-  @include flex-direction(column);
-  @include align-items(center);
-  //@include justify-content(center);
+  display: flex;
+  flex-flow: column;
+  align-items: center;
   position: relative;
-  height: 220 / $unit;
-  width: 300 / $unit;
-  @include border-radius(8px);
+  border-radius: 8px;
   background-color: hsla(0, 0%, 100%, .3);
-
-  &::before{
-    z-index: -1;
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    @include filter(blur(10px));
-  }
-  .icon{
-    img{
-      display: inline-block;
-      margin: 0 auto;
-    }
-  }
-  .inputBox{
-    @include display-flex;
-    @include flex-direction(column);
-    @include align-items(center);
-
-    form{
+  .inputBox {
+    //display: flex;
+    //flex-flow: column;
+    //align-items: center;
+    form {
       position: relative;
     }
-    input{
+    input {
       outline: none;
       border: none;
       border-bottom: 1px solid #fff;
       background-color: inherit;
       font-size: 20px;
       color: #fff;
-      &::-webkit-input-placeholder{
+      background: rgba(0, 0, 0, .4);
+      &::-webkit-input-placeholder {
         color: #fff;
       }
-      &:focus{
-        @include box-shadow(2px 1px 1px #ccc);
+      &:focus {
+        box-shadow: 2px 1px 1px #ccc;
       }
     }
-
-    .account{
-      width: 200/$unit;
-      height: 20/$unit;
-
-    }
-    .notice{
+    .notice {
       display: block;
-      width: 200/$unit;
-      height: 15/$unit;
       font-size: 14px;
       line-height: 1.7;
       color: red;
       margin-top: 5/$unit;
     }
-    .password{
-      width: 200/$unit;
-      height: 20/$unit;
+    .password {
       margin-top: 15/$unit;
     }
   }
-  .btn{
-    height: 30/$unit;
-    width: 100/$unit;
+  .btn {
     font-size: 20px;
+  }
+}
+
+@media (max-width: 1280px) {
+  .wrapper {
+    width: 35%;
+  }
+}
+
+@media (max-width: 767px){
+  .wrapper{
+    width: 75%;
+    padding: 10px 0;
   }
 }

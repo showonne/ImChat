@@ -1,3 +1,5 @@
+'use strict';
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -16,6 +18,8 @@ var db = require('./db.js');
 var multer = require('multer');
 var app = express();
 
+
+let a = "show";
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -77,9 +81,15 @@ app.use(function(err, req, res, next) {
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 
+<<<<<<< HEAD
 
 server.listen(80, function(){
   console.log('server is listening on port 80');
+=======
+console.log(process.env.port);
+server.listen(3000, function(){
+  console.log('server is listening on port 3000');
+>>>>>>> fcf819ace15dc81a90eeadb50b533a2edfe4ca86
 });
 
 var socketArr = {};
