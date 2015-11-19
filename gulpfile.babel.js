@@ -19,7 +19,6 @@ gulp.task('sass',['clean'], () => {
                .pipe(sass().on('error', sass.logError))
                .pipe(autoprefixer())
                .pipe(gulp.dest('./public/stylesheets/'))
-               .pipe(browserSync.reload({stream: true}));
 });
 
 gulp.task('minify', ['sass'], () => {
@@ -27,6 +26,7 @@ gulp.task('minify', ['sass'], () => {
        .pipe(minifyCss())
        .pipe(rename({suffix: '.min'}))
        .pipe(gulp.dest('./public/stylesheets/'))
+       .pipe(browserSync.reload({stream: true}));
 });
 
 gulp.task('server', ['nodemon'], () => {
@@ -35,7 +35,7 @@ gulp.task('server', ['nodemon'], () => {
         files: ['public/stylesheets/*.css'],
         port: 4000
     });
-    gulp.watch('./public/sass/*.scss', ['sass', 'minify']);
+    gulp.watch('./public/sass/*.scss', ['minify']);
     gulp.watch('./views/*.ejs').on('change', browserSync.reload);
 });
 
