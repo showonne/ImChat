@@ -20,6 +20,7 @@ var app = express();
 
 
 let a = "show";
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -81,9 +82,11 @@ app.use(function(err, req, res, next) {
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 
-console.log(process.env.port);
-server.listen(3000, function(){
-  console.log('server is listening on port 3000');
+var port = process.env.PORT || '3000';
+app.set('port', port);
+
+server.listen(app.get('port'), function(){
+  console.log('server is listening on port ', app.get('port') || 3000);
 });
 
 var socketArr = {};

@@ -1,3 +1,4 @@
+@import "common";
 $unit: 750/10rem;
 
 html, body {
@@ -39,7 +40,7 @@ body {
         color: #fff;
       }
       &:focus {
-        box-shadow: 2px 1px 1px #ccc;
+        box-shadow: 2px 1px 1px #ccc ;
       }
     }
     .notice {

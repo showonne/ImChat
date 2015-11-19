@@ -1,0 +1,14 @@
+$cyan-normal: #00838F;
+$cyan-hover: #006064;
+$cyan-light: #0097A7;
+
+.btn-primary{
+  background: $cyan-normal;
+  border: none;
+  &:hover{
+    background: $cyan-hover;
+  }
+  &:active{
+    background: $cyan-hover;
+  }
+}

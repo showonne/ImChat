@@ -1,4 +1,4 @@
-
+@import "common";
 $unit: 750/10rem;
 
 html, body{
@@ -8,9 +8,10 @@ html, body{
 
 .header{
   position: fixed;
+  z-index: 999;
   width: 100%;
   height: 60/$unit;
-  background-color: #00b3ee;
+  background-color: $cyan-normal;
   display: flex;
   justify-content: center;
   align-items: center;
