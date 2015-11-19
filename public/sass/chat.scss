@@ -1,3 +1,4 @@
+@import "common";
 $unit: 750/10rem;
 
 html,body{
@@ -18,11 +19,11 @@ ul{
 
   aside{
     flex: 160;
-    background-color: #114D88;
+    background-color: $cyan-normal;
     position: relative;
 
     .teamManage{
-      background-color: #1976D2;
+      background-color: $cyan-light;
       padding-top: 12/$unit;
       padding-bottom: 6/$unit;
       .teamBtn{
@@ -66,7 +67,7 @@ ul{
             text-align: left;
             padding-left: 20/$unit;
             &:hover{
-              background-color: #093E72;
+              background-color: $cyan-hover;
             }
           }
         }
@@ -118,13 +119,12 @@ ul{
           width: 100%;
           height: 20/$unit;
           &:hover{
-            background-color: #093E72;
+            background-color: $cyan-hover;
             .cancle{
               visibility: visible;
             }
           }
           a{
-            padding: 2px 0;
             line-height: 1.5;
             display: inline-block;
             width: 85%;
@@ -209,7 +209,7 @@ ul{
       padding-bottom: 1/$unit;
       box-sizing: border-box;
       box-shadow: 0 -2px 4px 0 rgba(0,0,0,.1);
-      border-bottom: 1px solid #000;
+      border-bottom: 1px solid #ccc;
       box-shadow: 0 1px 1px 1px #ccc;
       .returnGroupChat{
         display: inline-block;
@@ -385,7 +385,7 @@ ul{
 }
 
 .otherphoto{
-  background-color: #114D88;
+  background-color: #00838F;
   color: #fff;
   display: block;
   height: 40px;
@@ -479,7 +479,7 @@ input[type="checkbox"] + label::before{
   display: inline-block;
   margin-right: .2em;
   border-radius: 50%;
-  background: #1976D2;
+  background: #0097A7;
 
 }
 input[type="checkbox"]:checked + label::before{
