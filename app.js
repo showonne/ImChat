@@ -82,11 +82,6 @@ var io = require('socket.io')(server);
 
 
 server.listen(3000, function(){
-  console.log('server is listening on port 3000');
-var port = process.env.PORT || '3000';
-app.set('port', port);
-
-server.listen(app.get('port'), function(){
   console.log('server is listening on port ', app.get('port') || 3000);
 });
 
