@@ -21,10 +21,11 @@ body {
   position: relative;
   border-radius: 8px;
   background-color: hsla(0, 0%, 100%, .3);
+  padding:  20px 0;
+  .icon{
+    margin: 10px auto;
+  }
   .inputBox {
-    //display: flex;
-    //flex-flow: column;
-    //align-items: center;
     form {
       position: relative;
     }
@@ -40,11 +41,12 @@ body {
         color: #fff;
       }
       &:focus {
-        box-shadow: 2px 1px 1px #ccc ;
+        box-shadow: 1px 0px 1px #ccc ;
       }
     }
     .notice {
       display: block;
+      width: 200/$unit;
       font-size: 14px;
       line-height: 1.7;
       color: red;
@@ -53,6 +55,10 @@ body {
     .password {
       margin-top: 15/$unit;
     }
+  }
+  .btn-group{
+    margin-top: 20px;
+    margin-bottom: 10px;
   }
   .btn {
     font-size: 20px;

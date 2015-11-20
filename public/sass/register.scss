@@ -19,11 +19,9 @@ body{
   display: flex;
   flex-flow: column;
   align-items: center;
-  //justify-content: center
   position: relative;
-  height: 260 / $unit;
-  width: 300 / $unit;
   border-radius: 8px;
+  padding: 20px 0;
   background-color: hsla(0, 0%, 100%, .3);
 
   &::before{
@@ -37,6 +35,7 @@ body{
     filter: blur(10px);
   }
   .icon{
+    margin-bottom: 20px;
     img{
       display: inline-block;
       margin: 0 auto;
@@ -50,9 +49,9 @@ body{
       outline: none;
       border: none;
       border-bottom: 1px solid #fff;
-      background-color: inherit;
       font-size: 20px;
       color: #fff;
+      background: rgba(0, 0, 0, .4);
       &::-webkit-input-placeholder{
         color: #fff;
       }
@@ -61,8 +60,8 @@ body{
       }
     }
     .account{
-      width: 200/$unit;
-      height: 20/$unit;
+      //width: 200/$unit;
+      //height: 20/$unit;
     }
     .notice{
       display: block;
@@ -74,21 +73,33 @@ body{
       margin-top: 5/$unit;
     }
     .password{
-      width: 200/$unit;
-      height: 20/$unit;
+      //width: 200/$unit;
+      //height: 20/$unit;
       margin-top: 15/$unit;
     }
     .password_repeat{
-      width: 200/$unit;
-      height: 20/$unit;
+      //width: 200/$unit;
+      //height: 20/$unit;
       margin-top: 15/$unit;
     }
   }
   .btnGroup{
     padding-top: -40px;
     .register{
-      height: 30/$unit;
       width: 200/$unit;
     }
+  }
+}
+
+@media (max-width: 1280px) {
+  .wrapper {
+    width: 35%;
+  }
+}
+
+@media (max-width: 767px){
+  .wrapper{
+    width: 75%;
+    padding: 10px 0;
   }
 }
