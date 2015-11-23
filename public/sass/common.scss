@@ -2,6 +2,13 @@ $cyan-normal: #00838F;
 $cyan-hover: #006064;
 $cyan-light: #0097A7;
 
+*{
+  &::selection{
+    color: #fff;
+    background: #B2EBF2;
+  }
+}
+
 .btn-primary{
   background: $cyan-normal;
   border: none;

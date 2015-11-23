@@ -1,14 +1,15 @@
 var express = require('express');
 var router = express.Router();
+var utils = require('../utils/utils.js');
 var Account = require('../models/accountModel');
 var Team = require('../models/teamModel');
 
-router.get('/', checkNotLogin);
+router.get('/', utils.checkNotLogin);
 router.get('/', function(req, res) {
   res.render('index', { title: '主页' });
 });
 
-router.post('/logon', checkNotLogin);
+router.post('/logon', utils.checkNotLogin);
 router.post('/logon', function(req, res){
   Account.find({account: req.body.account}, function(err, account){
     if(err){
@@ -23,7 +24,7 @@ router.post('/logon', function(req, res){
           if(account[0].teams.length > 0){
             Team.find({id: {$in: account[0].teams}}, function(err, team){
               if(err){
-                consoloe.log(err);
+                console.log(err);
               }else{
                 req.session.account = account[0];
                 var redirecturl = '/team/' + team[0].id;
@@ -43,12 +44,12 @@ router.post('/logon', function(req, res){
   });
 });
 
-router.get('/regsiter', checkNotLogin);
+router.get('/regsiter', utils.checkNotLogin);
 router.get('/register',function(req, res){
   res.render('register', {title: '注册'});
 });
 
-router.post('/regsiter', checkNotLogin);
+router.post('/regsiter', utils.checkNotLogin);
 router.post('/register',function(req, res){
   Account.find({account: req.body.account}, function(err, account){
     if(err){
@@ -57,7 +58,7 @@ router.post('/register',function(req, res){
       if(account.length > 0){
         res.json({success: 0, msg: '用户名已存在'});
       }else{
-        var id = makeId();
+        var id = utils.makeId();
         var n_account = new Account({id: id, account: req.body.account, password: req.body.password});
         n_account.save(function(err, account){
           if(err){
@@ -75,7 +76,7 @@ router.post('/register',function(req, res){
 
 
 
-router.get('/setting/personal', checkLogin);
+router.get('/setting/personal', utils.checkLogin);
 router.get('/setting/personal', function(req, res){
   console.log(req.session.account);
   Account.find({account: req.session.account.account}, function(err, account){
@@ -96,7 +97,7 @@ router.get('/setting/personal', function(req, res){
   });
 });
 
-router.post('/setting/personal', checkLogin);
+router.post('/setting/personal', utils.checkLogin);
 router.post('/setting/personal', function(req, res){
   Account.update({account: req.session.account.account},{nickname: req.body.nickname, email: req.body.email},
       function(err){
@@ -120,13 +121,13 @@ router.post('/upload', function(req, res){
   res.json({success: 1, imgsrc: req.files.file.name});
 });
 
-router.get('/logout', checkLogin);
+router.get('/logout', utils.checkLogin);
 router.get('/logout', function(req, res){
   req.session.account = null;
   res.redirect('/');
 });
 
-router.get('/redirect', checkLogin);
+router.get('/redirect', utils.checkLogin);
 router.get('/redirect', function(req, res){
   Account.find({id: req.session.account.id}, function(err, accounts){
     if(err){
@@ -145,26 +146,7 @@ router.get('/redirect', function(req, res){
 });
 //
 
-//产生唯一id
-function makeId(){
-  var str1 = new Date().getTime().toString();
-  var str2 = Math.floor(Math.random()* 100).toString().toString();
-  return str1 + str2;
-}
 
 
-function checkLogin(req, res, next) {
-  if (!req.session.account) {
-    res.redirect('/');
-  }
-  next();
-}
-
-function checkNotLogin(req, res, next) {
-  if (req.session.account) {
-    res.redirect('back');
-  }
-  next();
-}
 
 module.exports = router;

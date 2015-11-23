@@ -1,19 +1,20 @@
 var express = require('express');
 var EventProxy = require('eventproxy');
+var utils = require('../utils/utils.js');
 var router = express.Router();
 var Account = require('../models/accountModel');
 var Team = require('../models/teamModel');
 var chatRecord = require('../models/chatRecordModel');
 
-router.get('/create', checkLogin);
+router.get('/create', utils.checkLogin);
 router.get('/create', function(req, res){
     console.log(req.session.account);
     res.render('teamscreate',{});
 });
 
-router.post('/create', checkLogin);
+router.post('/create', utils.checkLogin);
 router.post('/create', function(req, res){
-    var id = makeId();
+    var id = utils.makeId();
     var n_team = new Team({id: id, teamname: req.body.teamname, members: [req.session.account.id]});
     n_team.save(function(err){
         if(err){
@@ -38,7 +39,7 @@ router.post('/create', function(req, res){
     });
 });
 //聊天界面,最主要的界面
-router.get('/:teamid', checkLogin);
+router.get('/:teamid', utils.checkLogin);
 router.get('/:teamid', function(req, res){
     var eq = new EventProxy();
     eq.all('getAccount', 'getCurrentTeam', function(account, team){
@@ -182,25 +183,7 @@ function getMembersByTeam(team){
     });
 }
 
-function makeId(){
-    var str1 = new Date().getTime().toString();
-    var str2 = Math.floor(Math.random()* 100).toString().toString();
-    return str1 + str2;
-}
 
 
-function checkLogin(req, res, next) {
-    if (!req.session.account) {
-        res.redirect('/');
-    }
-    next();
-}
-
-function checkNotLogin(req, res, next) {
-    if (req.session.account) {
-        res.redirect('back');
-    }
-    next();
-}
 
 module.exports = router;

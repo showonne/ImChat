@@ -46,25 +46,5 @@ router.post('/private', function(req, res){
     });
 });
 
-function makeId(){
-    var str1 = new Date().getTime().toString();
-    var str2 = Math.floor(Math.random()* 100).toString().toString();
-    return str1 + str2;
-}
-
-
-function checkLogin(req, res, next) {
-    if (!req.session.account) {
-        res.redirect('/');
-    }
-    next();
-}
-
-function checkNotLogin(req, res, next) {
-    if (req.session.account) {
-        res.redirect('back');
-    }
-    next();
-}
 
 module.exports = router;
