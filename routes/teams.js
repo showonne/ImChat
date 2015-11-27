@@ -12,7 +12,6 @@ router.get('/create', function(req, res){
     res.render('teamscreate',{});
 });
 
-router.post('/create', utils.checkLogin);
 router.post('/create', function(req, res){
     var id = utils.makeId();
     var n_team = new Team({id: id, teamname: req.body.teamname, members: [req.session.account.id]});
@@ -76,8 +75,11 @@ router.get('/:teamid', function(req, res){
 router.get('/:teamid/invate', function(req, res){
     if(req.session.account){
         console.log(req.session.account);
+        if(req.session.account.teams.indexOf(req.params.teamid) != -1){
+            res.render('invate', {notice: '您已经在该组织中，请不要重复加入!'});
+        }
     }else{
-        res.render('invate');
+        res.render('invate', {notice: ''});
     }
 });
 
