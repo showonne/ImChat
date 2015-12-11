@@ -4,7 +4,6 @@
 $(function(){
     var $account = $(".account"),
         $password = $(".password");
-dasdsa
 
     $(".logOn").click(function(){
         var account = $account.val(),
