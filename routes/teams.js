@@ -95,7 +95,8 @@ router.post('/:teamid/invate', function(req, res){
                     if(account.length <= 0){
                         res.json({success: 0, msg: '用户不存在'});
                     }else{
-                        if(account[0].password != req.body.password){
+                        var password = utils.getHashPassword(req.body.password)
+                        if(account[0].password != password){
                             res.json({success: 0, msg: '用户名或密码错误'});
                         }else{
                             var ep = new EventProxy();

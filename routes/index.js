@@ -18,7 +18,8 @@ router.post('/logon', function(req, res){
       if(account.length == 0){
         res.json({success: 0, msg: '用户名不存在.'});
       }else{
-        if(req.body.password != account[0].password){
+        var password = utils.getHashPassword(req.body.password);
+        if(password != account[0].password){
           res.json({success: 0, msg: '密码错误.'});
         }else{
           if(account[0].teams.length > 0){
@@ -59,7 +60,8 @@ router.post('/register',function(req, res){
         res.json({success: 0, msg: '用户名已存在'});
       }else{
         var id = utils.makeId();
-        var n_account = new Account({id: id, account: req.body.account, password: req.body.password});
+        var password = utils.getHashPassword(req.body.password);
+        var n_account = new Account({id: id, account: req.body.account, password: password});
         n_account.save(function(err, account){
           if(err){
             console.log(err);
