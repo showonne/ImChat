@@ -14,10 +14,6 @@ $(function(){
         accountid: currentaccount
     });
 
-    socket.on('joined', function(data){
-        console.log(data.accountid + "joined room" + data.teamid + "succeed.");
-    });
-
     var $input = $("#inputContent");
     //发送消息功能
     $input.keydown(function(e){
@@ -80,21 +76,30 @@ $(function(){
     });
     //接收消息功能(群聊)
     socket.on('replyMsg', function(data){
-        addToMessageBox(data.from, data.nickname, data.msg);
-        var increasement = $(".messageBox>:last").height(),
-            initialScroll = $("#iscroll").scrollTop();
-        $("#iscroll").scrollTop(initialScroll + increasement + 15);
+        if(currentPrivateChatId == 'all'){
+            addToMessageBox(data.from, data.nickname, data.msg);
+            var increasement = $(".messageBox>:last").height(),
+                initialScroll = $("#iscroll").scrollTop();
+            $("#iscroll").scrollTop(initialScroll + increasement + 15);
+        }else{
+            var $returnBadge = $(".badge.return"),
+                number = $returnBadge.text() == '' ? 1 : parseInt($returnBadge.text(), 10) + 1;
+            $returnBadge.text(number);
+        }
     });
     //接收消息(私聊)
     socket.on('replyPriMsg', function(data){
         if(isContain(data.from)){
+            //如果是在自言自语 - -！
             if(currentPrivateChatId ==  data.from){
                 addToMessageBox(data.from, data.nickname, data.msg);
                 var increasement = $(".messageBox>:last").height(),
                     initialScroll = $("#iscroll").scrollTop();
                 $("#iscroll").scrollTop(initialScroll + increasement + 15);
             }else{
-                ;
+                var $target = $(".private[data-id=" + data.from + "]");
+                var number = $target.text() == '' ? 1 : parseInt($target.text(), 10) + 1;
+                $target.text(number);
             }
         }else{
             createPrivateChatItem(data.nickname, data.from);
@@ -173,12 +178,14 @@ $(function(){
     $privateChat.click(function(){
         if(!isContain($(this).data('privateid'))){
             createPrivateChatItem($(this).text(), $(this).data('privateid'));
+            $(".private[data-id=" + $(this).data('privateid') + "]").text('');
         }else{
             return ;
         }
     });
     //返回群聊
     $(".returnGroupChat").click(function(){
+        $(".badge.return").text('');
         returnGroupChat();
         getChatRecord(currentteam, 'all');
     });
@@ -282,6 +289,7 @@ function removeFromList(id){
 
 //切换到私聊页面
 function privateChatTo(id){
+    $(".private[data-id=" + id + "]").text('');
     $(".topicName").text("私聊");
     $(".returnGroupChat").css('visibility', 'visible');
     getPrivateChatRecord(id);
@@ -292,7 +300,6 @@ function privateChatTo(id){
 //判断私聊列表中是否有指定项
 function isContain(id){
     var aimItemStr = ".chatList>li[data-privateid = " + id +"]";
-    console.log(aimItemStr);
     var aimItem = $(aimItemStr);
     if(aimItem.length > 0){
         return true;
@@ -309,6 +316,7 @@ function returnGroupChat(){
 
 function createPrivateChatItem(text, id) {
     var item = $("<li class='listitem' data-privateid='" + id + "'>" +
+        "<span class='badge private' data-id=" + id + ">1</span>" +
         "<a href='javascript:void(0);' class='privateChatItem' data-privateid='" + id + "' onclick='privateChatTo(" + id + ")'>" + text + "</a>" +
         "<span class='cancle' data-privateid='" + id + "' onClick='removeFromList(" + id + ")'>×</span>" +
         "</li>");

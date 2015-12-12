@@ -10,6 +10,17 @@ ul{
   padding: 0px;
 }
 
+.badge{
+  position: relative;
+  left: 150px;
+  top: -2px;
+  background-color: $badge-alert;
+  &.return{
+    background-color: $badge-alert;
+    left: 5px;
+  }
+}
+
 .container1{
   height: 100%;
   width: 100%;
