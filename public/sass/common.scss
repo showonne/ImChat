@@ -20,3 +20,19 @@ $badge-alert: #E84E40;
     background: $cyan-hover;
   }
 }
+
+#particles-js{
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.noborder-top{
+  border-top: none !important;
+}
+.noborder-vertical{
+  border-top: none !important;
+  border-bottom: none !important;
+}

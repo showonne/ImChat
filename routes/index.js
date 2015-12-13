@@ -4,7 +4,6 @@ var utils = require('../utils/utils.js');
 var Account = require('../models/accountModel');
 var Team = require('../models/teamModel');
 
-router.get('/', utils.checkNotLogin);
 router.get('/', function(req, res) {
   res.render('index', { title: '主页' });
 });

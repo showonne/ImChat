@@ -1,5 +1,5 @@
 $(function(){
-   $(".btn").click(function(){
+   $(".button").click(function(){
       var account = $(".account").val(),
           password = $(".password").val();
 
@@ -18,4 +18,9 @@ $(function(){
          }
       });
    });
+
+   particlesJS.load('particles-js', '/javascripts/particles.json', function() {
+      console.log('callback - particles.js config loaded');
+   });
+
 });

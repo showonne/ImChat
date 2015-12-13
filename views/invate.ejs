@@ -5,16 +5,29 @@
     <title>Invate</title>
     <% include dependence.ejs %>
     <link rel="stylesheet" href="/stylesheets/invate.min.css"/>
-    <script src="/javascripts/invate.js"></script>
 </head>
 <body>
-    <div class="logon">
-        <h4>登陆以加入团队</h4>
-        <span class="notice"><%= notice || "" %></span>
-        <input type="text" class="account form-control" placeholder="用户名" <%= notice ? 'disabled' : '' %> />
-        <input type="password" class="password form-control" placeholder="密码" <%= notice ? 'disabled' : '' %> />
-        <span class="notice"></span>
-        <button class="btn btn-primary" <%= notice ? 'disabled' : '' %> >确定</button>
+    <div class="main_body">
+        <div class="wrapper">
+            <h4>登录以加入团队</h4>
+            <form action="" class="form">
+                <div class="form_item">
+                    <input type="text" class="account" placeholder="用户名" <%= notice ? 'disabled' : '' %> />
+                </div>
+                <div class="form_item noborder-top">
+                    <input type="password" class="password" placeholder="密码" <%= notice ? 'disabled' : '' %> />
+                </div>
+                <div class="notice_wrapper">
+                    <span class="notice"><%= notice || "" %></span>
+                </div>
+                <div class="button_wrapper">
+                    <input type="button" class="button" value="确定" <%= notice ? 'disabled' : '' %> />
+                </div>
+            </form>
+        </div>
     </div>
+    <div id="particles-js"></div>
+    <script src="/javascripts/particles.js"></script>
+    <script src="/javascripts/invate.js"></script>
 </body>
 </html>

@@ -45,24 +45,6 @@ body{
     display: flex;
     flex-flow: column;
     align-items: center;
-    input{
-      outline: none;
-      border: none;
-      border-bottom: 1px solid #fff;
-      font-size: 20px;
-      color: #fff;
-      background: rgba(0, 0, 0, .4);
-      &::-webkit-input-placeholder{
-        color: #fff;
-      }
-      &:focus{
-        box-shadow: 2px 1px 1px #ccc;
-      }
-    }
-    .account{
-      //width: 200/$unit;
-      //height: 20/$unit;
-    }
     .notice{
       display: block;
       width: 200/$unit;
@@ -78,8 +60,6 @@ body{
       margin-top: 15/$unit;
     }
     .password_repeat{
-      //width: 200/$unit;
-      //height: 20/$unit;
       margin-top: 15/$unit;
     }
   }
