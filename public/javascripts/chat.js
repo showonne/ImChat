@@ -133,38 +133,10 @@ $(function(){
        $(".emojiBox").toggle();
     });
     $(".image").click(function(){
-        $(".image_file").click();
+        upload('image');
     });
-    $(".image_file").change(function(){
-        var file = $(".image_file")[0].files[0];
-        var fr = new FileReader();
-        if(file){
-            fr.onload = function(evt){
-                var fd = new FormData();
-                fd.append('file', file);
-                $.ajax({
-                    url: '/upload',
-                    type: 'POST',
-                    data: fd,
-                    processData: false,
-                    contentType: false
-                }).done(function(res){
-                    if(res.success == 1){
-                        console.log(res.imgsrc);
-                        var imgContent = "[-" + res.imgsrc + "-]";
-                        console.log(imgContent);
-                        $input.insertContent(imgContent);
-                    }else{
-                        console.log('unknow error');
-                    }
-                });
-            }
-            fr.readAsDataURL(file);
-        }else{
-            ;
-        }
-        console.log(file);
-
+    $(".file").click(function(){
+        upload('file');
     });
 
     $(".emojiItem").click(function(){
@@ -223,7 +195,8 @@ $(function(){
         }
     });
 
-    var isTodoShow = false;
+    var isTodoShow = false,
+        isFileShow = false;
     $(".todoToggle").click(function(){
         if(isTodoShow){
             $(".todoBox").css("transform", "translate(400px, 0)");
@@ -232,6 +205,48 @@ $(function(){
             $(".todoBox").css("transform", "translate(0, 0)");
             isTodoShow = true;
         }
+    })
+
+    $(".fileToggle").click(function(){
+        $ul = $(".fileBox ul");
+        var icon = {
+            'zip': '&#xe630;',
+            'pdf': '&#xe63f;',
+            'txt': '&#xe6d7;'
+        };
+
+        if(isFileShow){
+            $(".fileBox").css("transform", "translate(400px, 0)");
+            isFileShow = false;
+        }else{
+            $.ajax({
+                url: '/getfiles',
+                type: 'post',
+                data: {teamId: location.pathname.split('/')[2]}
+            }).done(function(res){
+                if(res.success == 1){
+                    var files= res.files;
+                    $ul.empty();
+                    files.map(function(item, index){
+                        var type = item.src.split('.')[1];
+                        var $newItem = "<li><i class='iconfont'>" + icon[type] + "</i><div class='download " + type + "' data-source='"+ item.src + "'>" + item.originalname + "</div></li>";
+                        $ul.append($newItem);
+                    });
+
+                    $(".fileBox").css("transform", "translate(0, 0)");
+                    isFileShow = true;
+                }
+            });
+        }
+    });
+
+    $(document.body).delegate('.download', 'click', function(e){
+        e.preventDefault();
+        var dataSrc = $(this).data('source'),
+            fileName = $(this).text();
+        var downloadURL = '/download?src=' + dataSrc + "&fileName=" + fileName;
+
+        window.open(downloadURL);
     })
 });
 
@@ -344,6 +359,56 @@ function addToMessageBox(id, nickname, msg){
                             "</div>" +
                       "</div>");
     $messageBox.append($mediaItem);
+}
+
+function upload(type){
+    var mimeType = ['image/jpeg', 'image/png', 'image/gif', 'application/zip', 'text/plain', 'application/pdf', 'application/msword'];
+    $("." + type + "_file").click();
+
+    $("." + type + "_file").change(function(){
+        var file = $("." + type + "_file")[0].files[0],
+            mimeIndex = _.indexOf(mimeType, file.type);
+
+        if(mimeIndex == -1 || (type == 'image' && mimeIndex > 2)){
+            console.log('暂时不支持该类型文件!');
+            return;
+        }else{
+            var fr = new FileReader();
+            if(file){
+                fr.onload = function(evt){
+                    var fd = new FormData();
+                    fd.append('file', file);
+                    fd.append('uploadType', type);
+                    fd.append('teamId', location.pathname.split('/')[2]);
+                    $.ajax({
+                        url: '/upload',
+                        type: 'POST',
+                        data: fd,
+                        processData: false,
+                        contentType: false
+                    }).done(function(res){
+                        if(res.success == 1){
+                            if(type == 'image'){
+                                var imgContent = "[-" + res.imgsrc + "-]";
+                                $input.insertContent(imgContent);
+                            }else{
+                                alert(res.originalname + '已经上传到' + res.src );
+                            }
+                        }else{
+                            console.log('unknow error');
+                        }
+                    });
+                }
+                fr.readAsDataURL(file);
+                console.log('- -!');
+            }else{
+                ;
+            }
+        }
+
+
+
+    });
 }
 
 

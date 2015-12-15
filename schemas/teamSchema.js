@@ -6,6 +6,10 @@ var teamSchema = new mongoose.Schema({
     members: {
         type: Array,
         default: []
+    },
+    files: {
+        type: Array,
+        default: []
     }
 });
 

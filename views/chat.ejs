@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/stylesheets/chat.min.css"/>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/javascripts/vue.js"></script>
+    <script src="/javascripts/lodash.min.js"></script>
     <script src="/javascripts/chat.js"></script>
     <script src="/javascripts/marked.js"></script>
 </head>
@@ -47,6 +48,7 @@
             <div class="header">
                 <span class="returnGroupChat btn btn-default">返回群聊<span class="badge return"></span></span>
                 <span class="topicName">群聊</span>
+                <span class="fileToggle"><img src="/images/iconfont-fujianjia.png" alt=""/></span>
                 <span class="todoToggle"><img src="/images/iconfont-listtodo.png"></span>
             </div>
             <div class="chatBox">
@@ -54,6 +56,7 @@
                     <div class="messageBox">
                     </div>
                 </div>
+                <!-- 右侧弹出框 -->
                 <div class="todoBox">
                     <div class="todoHeader">
                         <h4 class="todoTitle">待办事项小记</h4>
@@ -69,12 +72,20 @@
                     </ul>
                     <input class="newTodo" type="text" v-on="keydown: addTodo | key 13" placeholder="又有事情做了？">
                 </div>
+                <div class="fileBox">
+                    <h4 class="fileTitle">群组文件</h4>
+                    <ul>
+                    </ul>
+                </div>
+                <!-- end -->
             </div>
             <div class="inputBox">
                 <div class="toolbar">
                     <a href="javascript:void(0);" class="emoji"><img src="/images/iconfont-biaoqing.png" alt=""/></a>
                     <a href="javascript:void(0);" class="image"><img src="/images/iconfont-tupian.png" alt=""/></a>
+                    <a href="javascript:void(0);" class="file"><img src="/images/iconfont-files.png" alt=""/></a>
                     <input type="file" class="image_file" style="visibility: hidden;"/>
+                    <input type="file" class="file_file" style="visibility: hidden;"/>
                 </div>
                 <textarea name="inputContent" id="inputContent" placeholder="说点什么呢..." spellcheck="false"></textarea>
                 <span>输入Shift + Enter 发送</span>

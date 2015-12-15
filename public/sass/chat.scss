@@ -234,7 +234,7 @@ ul{
         font-weight: 800;
         padding-left: 150/$unit;
       }
-      .todoToggle{
+      .todoToggle, .fileToggle{
         float: right;
         height: 30px;
         width: 34px;
@@ -456,6 +456,36 @@ ul{
     display: block;
     height: 30px;
     margin: 4px 0;
+  }
+}
+
+.fileBox{
+  position: absolute;
+  transform: translate(400px, 0);
+  padding-left: 6%;
+  width: 30%;
+  height: 65%;
+  overflow: scroll;
+  transition: all .25s ease;
+  border-left: 1px solid #ccc;
+  .todoHeader{
+    margin-bottom: 10px;
+  }
+  ul{
+    list-style: none;
+  }
+  li{
+    display: block;
+    height: 30px;
+    i{
+      position: relative;
+      left: -20px;
+      top: 22px;
+    }
+    div{
+      cursor: pointer;
+      color: $cyan-normal
+    }
   }
 }
 
