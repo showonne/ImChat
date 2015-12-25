@@ -18,6 +18,18 @@ var accountSchema = new mongoose.Schema({
     email:{
         type: String,
         default: ''
+    },
+    telephone: {
+        type: String,
+        default: ''
+    },
+    position: {
+        type: String,
+        default: ''
+    },
+    photo: {
+        type: String,
+        default: ''
     }
 });
 

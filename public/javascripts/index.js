@@ -78,7 +78,8 @@ $(function(){
 
     $(".subRegister").click(function(){
         var account = $(".register_account").val(),
-            password = $(".register_password").val();
+            password = $(".register_password").val(),
+            email = $(".register_email").val();
 
         if(account && password && isLegal) {
             $.ajax({
@@ -86,7 +87,8 @@ $(function(){
                 method: 'POST',
                 data: {
                     account: account,
-                    password: password
+                    password: password,
+                    email: email
                 }
             }).done(function (res) {
                 if (res.success == 0) {

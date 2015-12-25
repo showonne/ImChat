@@ -5,13 +5,13 @@
     <title>Chat</title>
     <% include dependence.ejs %>
     <link rel="stylesheet" href="/stylesheets/chat.min.css"/>
+    <!--<script src="/notie/notie.js"></script>-->
     <script src="/socket.io/socket.io.js"></script>
     <script src="/javascripts/vue.js"></script>
     <script src="/javascripts/lodash.min.js"></script>
-    <script src="/javascripts/chat.js"></script>
     <script src="/javascripts/marked.js"></script>
 </head>
-<body>
+<body id="notiebody">
     <div class="container1">
         <aside>
             <div class="teamManage">
@@ -38,9 +38,9 @@
             </div>
             <div class="settings">
                 <span class="photo">
-                    <%= account.nickname.slice(0, 1) %>
+                    <img src="<%= account.photo %>">
                 </span>
-                <span class="nickname" data-accountid="<%= account.id %>"><%= account.nickname %></span>
+                <span class="nickname" data-accountid="<%= account.id %>" data-photo="<%= account.photo %>"><%= account.nickname %></span>
                 <span class="up" data-toggle="modal" data-target="#upMenu">^</span>
             </div>
         </aside>
@@ -74,7 +74,7 @@
                 </div>
                 <div class="fileBox">
                     <h4 class="fileTitle">群组文件</h4>
-                    <ul>
+                    <ul class="filesGroup">
                     </ul>
                 </div>
                 <!-- end -->
@@ -188,5 +188,6 @@
             <a href="javascript:void(0);" class="emojiItem" data-mean="sorry"><img src="/emoji/sorry.gif"/></a>
         </div>
     </div>
+    <script src="/javascripts/chat.js"></script>
 </body>
 </html>

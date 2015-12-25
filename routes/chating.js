@@ -5,7 +5,7 @@ var chatRecord = require('../models/chatRecordModel');
 var privateChat = require('../models/privateChatModel');
 
 router.post('/public', function(req, res){
-    chatRecord.update({id: req.body.teamid, to: req.body.to}, {$push: {recordList: {id: req.session.account.id, nickname: req.body.nickname, msg: req.body.msg}}}, function(err, result){
+    chatRecord.update({id: req.body.teamid, to: req.body.to}, {$push: {recordList: {id: req.session.account.id, nickname: req.body.nickname, msg: req.body.msg, photo: req.body.photo}}}, function(err, result){
         if(err){
             console.log(err);
         }else{
@@ -20,7 +20,7 @@ router.post('/public', function(req, res){
 
 router.post('/private', function(req, res){
     privateChat.update({members: {$all: [req.body.to, req.session.account.id]}},
-        {$push: {recordList: {nickname: req.body.nickname, msg: req.body.msg}}},
+        {$push: {recordList: {nickname: req.body.nickname, msg: req.body.msg, photo: req.body.photo}}},
         function(err, result){
             if(err){
                 console.log(err);

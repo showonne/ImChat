@@ -3,6 +3,7 @@ $(function(){
     currentteam = $(".teamBtn").data('teamid');
     var socket = io.connect();
     var currentaccount = $(".nickname").data('accountid'),
+        currentphoto = $(".nickname").data('photo'),
         currentaccountNickname = $(".nickname").text();
 
     $(".memberTitle .title").click(function() {
@@ -27,6 +28,7 @@ $(function(){
                         teamid: currentteam,
                         to: currentPrivateChatId,
                         nickname: currentaccountNickname,
+                        photo: currentphoto,
                         msg: inputval
                     }
                 }).done(function(res){
@@ -36,7 +38,8 @@ $(function(){
                             teamid: currentteam,
                             nickname: currentaccountNickname,
                             to: currentPrivateChatId,
-                            msg: inputval
+                            msg: inputval,
+                            photo: currentphoto
                         });
                     }else{
                         console.log("unknow server error...");
@@ -49,7 +52,8 @@ $(function(){
                     data: {
                         to: currentPrivateChatId,
                         nickname: currentaccountNickname,
-                        msg: inputval
+                        msg: inputval,
+                        photo: currentphoto
                     }
                 }).done(function(res){
                     if(res.success == 1){
@@ -58,9 +62,10 @@ $(function(){
                             teamid: currentteam,
                             nickname: currentaccountNickname,
                             to: currentPrivateChatId,
-                            msg: inputval
+                            msg: inputval,
+                            photo: currentphoto
                         });
-                        addToMessageBox(currentaccount, currentaccountNickname, inputval);
+                        addToMessageBox(currentaccount, currentaccountNickname, currentphoto, inputval);
                         var increasement = $(".messageBox>:last").height(),
                             initialScroll = $("#iscroll").scrollTop();
                         $("#iscroll").scrollTop(initialScroll + increasement + 15);
@@ -77,7 +82,7 @@ $(function(){
     //接收消息功能(群聊)
     socket.on('replyMsg', function(data){
         if(currentPrivateChatId == 'all'){
-            addToMessageBox(data.from, data.nickname, data.msg);
+            addToMessageBox(data.from, data.nickname, data.photo, data.msg);
             var increasement = $(".messageBox>:last").height(),
                 initialScroll = $("#iscroll").scrollTop();
             $("#iscroll").scrollTop(initialScroll + increasement + 15);
@@ -92,7 +97,7 @@ $(function(){
         if(isContain(data.from)){
             //如果是在自言自语 - -！
             if(currentPrivateChatId ==  data.from){
-                addToMessageBox(data.from, data.nickname, data.msg);
+                addToMessageBox(data.from, data.nickname, data.photo, data.msg);
                 var increasement = $(".messageBox>:last").height(),
                     initialScroll = $("#iscroll").scrollTop();
                 $("#iscroll").scrollTop(initialScroll + increasement + 15);
@@ -229,7 +234,7 @@ $(function(){
                     $ul.empty();
                     files.map(function(item, index){
                         var type = item.src.split('.')[1];
-                        var $newItem = "<li><i class='iconfont'>" + icon[type] + "</i><div class='download " + type + "' data-source='"+ item.src + "'>" + item.originalname + "</div></li>";
+                        var $newItem = "<li><i class='iconfont'>" +  icon[type] + "</i><div class='download " + type + "' data-source='"+ item.src + "'>" + item.originalname + "</div></li>";
                         $ul.append($newItem);
                     });
 
@@ -245,9 +250,58 @@ $(function(){
         var dataSrc = $(this).data('source'),
             fileName = $(this).text();
         var downloadURL = '/download?src=' + dataSrc + "&fileName=" + fileName;
-
         window.open(downloadURL);
-    })
+    });
+
+    function upload(type){
+        var mimeType = ['image/jpeg', 'image/png', 'image/gif', 'application/zip', 'text/plain', 'application/pdf', 'application/msword'];
+        $("." + type + "_file").click();
+
+        $("." + type + "_file").change(function(){
+            var file = $("." + type + "_file")[0].files[0],
+                mimeIndex = _.indexOf(mimeType, file.type);
+
+            if(mimeIndex == -1 || (type == 'image' && mimeIndex > 2)){
+                console.log('暂时不支持该类型文件!');
+                return;
+            }else{
+                var fr = new FileReader();
+                if(file){
+                    fr.onload = function(evt){
+                        var fd = new FormData();
+                        fd.append('file', file);
+                        fd.append('uploadType', type);
+                        fd.append('teamId', location.pathname.split('/')[2]);
+                        $.ajax({
+                            url: '/upload',
+                            type: 'POST',
+                            data: fd,
+                            processData: false,
+                            contentType: false
+                        }).done(function(res){
+                            if(res.success == 1){
+                                if(type == 'image'){
+                                    var imgContent = "[-" + res.imgsrc + "-]";
+                                    $input.insertContent(imgContent);
+                                }else{
+                                    alert(res.originalname + '已经上传到' + res.src );
+                                }
+                            }else{
+                                console.log('unknow error');
+                            }
+                        });
+                    }
+                    fr.readAsDataURL(file);
+                    console.log('- -!');
+                }else{
+                    ;
+                }
+            }
+
+
+
+        });
+    }
 });
 
 function getChatRecord(teamid, to){
@@ -289,7 +343,7 @@ function getPrivateChatRecord(to){
 function initialMessageBox(record){
     $(".messageBox").empty();
     for(var i = 0; i < record.recordList.length; i++){
-        addToMessageBox(record.recordList[i].id, record.recordList[i].nickname, record.recordList[i].msg);
+        addToMessageBox(record.recordList[i].id, record.recordList[i].nickname, record.recordList[i].photo, record.recordList[i].msg);
     }
     $("#iscroll").scrollTop(99999);
 }
@@ -338,9 +392,10 @@ function createPrivateChatItem(text, id) {
     $(".chatList").append(item);
 }
 
-function addToMessageBox(id, nickname, msg){
+//
+function addToMessageBox(id, nickname, photo, msg){
     var $messageBox = $(".messageBox");
-    var photo = nickname.slice(0, 1);
+    //var photo = nickname.slice(0, 1);
     var realMsg = msg.replace(/<{([a-z]+)}>/g, function(match){
         return "<img src='/emoji/" + match.slice(2, -2) + ".gif' class='emojied'>";
     });
@@ -351,7 +406,7 @@ function addToMessageBox(id, nickname, msg){
     realMsg = marked(realMsg);
     var $mediaItem = $("<div class='media'>" +
                             "<div class='media-left media-top'>" +
-                                "<span class='otherphoto' data-userid='" + id + "'>" + photo + "</span>" +
+                                "<img src='" + photo + "'/>" +
                             "</div>" +
                             "<div class='media-body'>" +
                                 "<h4 class='media-heading'>" + nickname + "</h4>" +
@@ -361,55 +416,6 @@ function addToMessageBox(id, nickname, msg){
     $messageBox.append($mediaItem);
 }
 
-function upload(type){
-    var mimeType = ['image/jpeg', 'image/png', 'image/gif', 'application/zip', 'text/plain', 'application/pdf', 'application/msword'];
-    $("." + type + "_file").click();
-
-    $("." + type + "_file").change(function(){
-        var file = $("." + type + "_file")[0].files[0],
-            mimeIndex = _.indexOf(mimeType, file.type);
-
-        if(mimeIndex == -1 || (type == 'image' && mimeIndex > 2)){
-            console.log('暂时不支持该类型文件!');
-            return;
-        }else{
-            var fr = new FileReader();
-            if(file){
-                fr.onload = function(evt){
-                    var fd = new FormData();
-                    fd.append('file', file);
-                    fd.append('uploadType', type);
-                    fd.append('teamId', location.pathname.split('/')[2]);
-                    $.ajax({
-                        url: '/upload',
-                        type: 'POST',
-                        data: fd,
-                        processData: false,
-                        contentType: false
-                    }).done(function(res){
-                        if(res.success == 1){
-                            if(type == 'image'){
-                                var imgContent = "[-" + res.imgsrc + "-]";
-                                $input.insertContent(imgContent);
-                            }else{
-                                alert(res.originalname + '已经上传到' + res.src );
-                            }
-                        }else{
-                            console.log('unknow error');
-                        }
-                    });
-                }
-                fr.readAsDataURL(file);
-                console.log('- -!');
-            }else{
-                ;
-            }
-        }
-
-
-
-    });
-}
 
 
 (function($) {

@@ -2,15 +2,37 @@ $(function(){
     $(".subName").click(function(){
         var nickname = $(".nicknameInput").val(),
             email = $(".emailInput").val(),
-            $nickname_modal = $("#editName");
-        updateInfo(nickname, email, $nickname_modal);
+            $nickname_modal = $("#editName"),
+            telephone = $(".telephoneInput").val(),
+            position = $(".positionInput").val();
+        updateInfo(nickname, email, telephone, position, $nickname_modal);
     });
 
     $(".subEmail").click(function(){
         var nickname = $(".nicknameInput").val(),
             email = $(".emailInput").val(),
-            $email_modal = $("#editEmail");
-        updateInfo(nickname, email, $email_modal);
+            $email_modal = $("#editEmail"),
+            telephone = $(".telephoneInput").val(),
+            position = $(".positionInput").val();
+        updateInfo(nickname, email, telephone, position, $email_modal);
+    });
+
+    $(".subTelephone").click(function(){
+        var nickname = $(".nicknameInput").val(),
+            email = $(".emailInput").val(),
+            $telephone_modal = $("#editTelephone"),
+            telephone = $(".telephoneInput").val(),
+            position = $(".positionInput").val();
+        updateInfo(nickname, email, telephone, position, $telephone_modal);
+    });
+
+    $(".subPosition").click(function(){
+        var nickname = $(".nicknameInput").val(),
+            email = $(".emailInput").val(),
+            $position_modal = $("#editPosition"),
+            telephone = $(".telephoneInput").val(),
+            position = $(".positionInput").val();
+        updateInfo(nickname, email, telephone, position, $position_modal);
     });
 
     $(".return").click(function(){
@@ -51,13 +73,15 @@ $(function(){
     });
 });
 
-function updateInfo(nickname, email, modal){
+function updateInfo(nickname, email, telephone, position, modal){
     $.ajax({
         url: '/setting/personal',
         type: 'POST',
         data: {
             nickname: nickname,
-            email: email
+            email: email,
+            telephone: telephone,
+            position: position
         }
     }).done(function(res){
         if(res.success == 1){
@@ -70,4 +94,6 @@ function updateInfo(nickname, email, modal){
 function updateData(data){
     $(".nickname").text(data.nickname);
     $(".email").text(data.email);
+    $(".telephone").text(data.telephone);
+    $(".position").text(data.position);
 }

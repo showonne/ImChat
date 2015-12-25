@@ -1,3 +1,4 @@
+var crypto = require('crypto');
 var express = require('express');
 var path = require('path');
 var router = express.Router();
@@ -61,7 +62,10 @@ router.post('/register',function(req, res){
       }else{
         var id = utils.makeId();
         var password = utils.getHashPassword(req.body.password);
-        var n_account = new Account({id: id, account: req.body.account, password: password});
+        var md5 = crypto.createHash('md5');
+        var photo = md5.update(req.body.email.toLowerCase()).digest('hex'),
+            photoStr = "http://gravatar.com/avatar/" + photo + "?s=48";
+        var n_account = new Account({id: id, account: req.body.account, password: password, email: req.body.email, photo: photoStr});
         n_account.save(function(err, account){
           if(err){
             console.log(err);
@@ -101,13 +105,15 @@ router.get('/setting/personal', function(req, res){
 
 router.post('/setting/personal', utils.checkLogin);
 router.post('/setting/personal', function(req, res){
-  Account.update({account: req.session.account.account},{nickname: req.body.nickname, email: req.body.email},
+  Account.update({account: req.session.account.account},{nickname: req.body.nickname, email: req.body.email, telephone: req.body.telephone, position: req.body.position},
       function(err){
         if(err){
           console.log(err);
         }else{
           req.session.account.nickname = req.body.nickname;
           req.session.account.email = req.body.email;
+          req.session.account.telephone = req.body.telephone;
+          req.session.account.position = req.body.position;
           res.json({
             success: 1,
             account: req.session.account

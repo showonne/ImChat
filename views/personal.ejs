@@ -16,6 +16,15 @@
             <h4 class="title">个人资料</h4>
         </div>
         <div class="row">
+            <div class="col-md-2 col-md-offset-2">头像</div>
+            <div class="col-md-4 " >
+                <img src="<%= account.photo%>" alt=""/>
+            </div>
+            <div class="col-md-2">
+                <a href="https://en.gravatar.com/gravatars/new/computer" target="_blank"><button class="btn btn-primary btn-sm">修改头像</button></a>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-md-2 col-md-offset-2">昵称</div>
             <div class="col-md-4 nickname">
                 <%= account.nickname %>
@@ -31,6 +40,24 @@
             </div>
             <div class="col-md-2">
                 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editEmail">编辑</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2 col-md-offset-2">手机</div>
+            <div class="col-md-4 telephone">
+                <%= account.telephone %>
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editTelephone">编辑</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2 col-md-offset-2">职位</div>
+            <div class="col-md-4 position">
+                <%= account.position %>
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editPosition">编辑</button>
             </div>
         </div>
         <div class="row">
@@ -86,6 +113,48 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                     <button type="button" class="btn btn-primary subEmail">确定</button>
+                </div>
+            </div>
+        </dia>
+    </div>
+    <div id="editTelephone" class="modal fade" tabindex="-1" role="dialog">
+        <dia class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4>修改电话</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <input type="text" class="form-control telephoneInput" value="<%= account.telephone %>"/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary subTelephone">确定</button>
+                </div>
+            </div>
+        </dia>
+    </div>
+    <div id="editPosition" class="modal fade" tabindex="-1" role="dialog">
+        <dia class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4>修改职位</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <input type="text" class="form-control positionInput" value="<%= account.position %>"/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary subPosition">确定</button>
                 </div>
             </div>
         </dia>
