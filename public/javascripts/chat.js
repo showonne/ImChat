@@ -253,6 +253,10 @@ $(function(){
         window.open(downloadURL);
     });
 
+    var vChatList = new Vue({
+        
+    })
+
     function upload(type){
         var mimeType = ['image/jpeg', 'image/png', 'image/gif', 'application/zip', 'text/plain', 'application/pdf', 'application/msword'];
         $("." + type + "_file").click();
