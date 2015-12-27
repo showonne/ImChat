@@ -50,7 +50,7 @@ app.use('/chating', chating);
 
 // catch 404 and forward to error handler
 app.use(function(req, res){
-  res.render('404.ejs');
+  res.render('notfound.ejs');
 });
 
 // error handlers
@@ -106,7 +106,7 @@ io.on('connection', function(socket){
       }
     }
   });
- 
+
   socket.on('disconnect', function(){
     console.log("a user leaved...");
   });

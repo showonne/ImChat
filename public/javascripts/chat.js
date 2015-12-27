@@ -284,7 +284,7 @@ $(function(){
                                     var imgContent = "[-" + res.imgsrc + "-]";
                                     $input.insertContent(imgContent);
                                 }else{
-                                    alert(res.originalname + '已经上传到' + res.src );
+                                    alert(res.originalname + '上传完成!' );
                                 }
                             }else{
                                 console.log('unknow error');
