@@ -65,10 +65,12 @@ $(function(){
                             msg: inputval,
                             photo: currentphoto
                         });
-                        addToMessageBox(currentaccount, currentaccountNickname, currentphoto, inputval);
-                        var increasement = $(".messageBox>:last").height(),
-                            initialScroll = $("#iscroll").scrollTop();
-                        $("#iscroll").scrollTop(initialScroll + increasement + 15);
+                        var addChild = Promise.resolve(vChatList.$data.recordlist.push({photo: currentphoto, msg: inputval, nickname: currentaccountNickname}));
+                        addChild.then(function(){
+                            var increasement = $(".messageBox>:last").height(),
+                                initialScroll = $("#iscroll").scrollTop();
+                            $("#iscroll").scrollTop(initialScroll + increasement + 15);
+                        });
                     }else{
                         console.log("unknow server error...");
                     }
@@ -82,10 +84,12 @@ $(function(){
     //接收消息功能(群聊)
     socket.on('replyMsg', function(data){
         if(currentPrivateChatId == 'all'){
-            addToMessageBox(data.from, data.nickname, data.photo, data.msg);
-            var increasement = $(".messageBox>:last").height(),
-                initialScroll = $("#iscroll").scrollTop();
-            $("#iscroll").scrollTop(initialScroll + increasement + 15);
+            var addChild = Promise.resolve(vChatList.$data.recordlist.push({photo: data.photo, msg: data.msg, nickname: data.nickname}));
+            addChild.then(function(){
+                var increasement = $(".messageBox>:last").height(),
+                    initialScroll = $("#iscroll").scrollTop();
+                $("#iscroll").scrollTop(initialScroll + increasement + 15);
+            });
         }else{
             var $returnBadge = $(".badge.return"),
                 number = $returnBadge.text() == '' ? 1 : parseInt($returnBadge.text(), 10) + 1;
@@ -94,20 +98,21 @@ $(function(){
     });
     //接收消息(私聊)
     socket.on('replyPriMsg', function(data){
-        if(isContain(data.from)){
+        console.log(vPrivateChatList.isContain(data.from));
+        if(vPrivateChatList.isContain(data.from)){
             //如果是在自言自语 - -！
             if(currentPrivateChatId ==  data.from){
-                addToMessageBox(data.from, data.nickname, data.photo, data.msg);
-                var increasement = $(".messageBox>:last").height(),
-                    initialScroll = $("#iscroll").scrollTop();
-                $("#iscroll").scrollTop(initialScroll + increasement + 15);
+                var addChild = Promise.resolve(vChatList.$data.recordlist.push({photo: data.photo, msg: data.msg, nickname: data.nickname}));
+                addChild.then(function(){
+                    var increasement = $(".messageBox>:last").height(),
+                        initialScroll = $("#iscroll").scrollTop();
+                    $("#iscroll").scrollTop(initialScroll + increasement + 15);
+                });
             }else{
-                var $target = $(".private[data-id=" + data.from + "]");
-                var number = $target.text() == '' ? 1 : parseInt($target.text(), 10) + 1;
-                $target.text(number);
+                vPrivateChatList.addNum(data.from);
             }
         }else{
-            createPrivateChatItem(data.nickname, data.from);
+            vPrivateChatList.addItem({id: data.from, nickname: data.nickname, number: 1});
         }
     });
 
@@ -153,7 +158,7 @@ $(function(){
     var $privateChat = $(".privateChat");
     //将团队中的人添加到私聊列表中
     $privateChat.click(function(){
-        if(!isContain($(this).data('privateid'))){
+        if(vPrivateChatList.isContain($(this).data('privateid'))){
             createPrivateChatItem($(this).text(), $(this).data('privateid'));
             $(".private[data-id=" + $(this).data('privateid') + "]").text('');
         }else{
@@ -170,7 +175,104 @@ $(function(){
     //初始化群聊信息记录
     getChatRecord(currentteam, 'all');
 
-    var vm = new Vue({
+    //团队列表
+    var vTeamList = new Vue({
+        el: "#vTeamList",
+        data: {
+            teamlist: []
+        },
+        created: function(){
+            $.ajax({
+                type: 'get',
+                url: '/api/getTeamsByAccount'
+            }).done(function(res){
+                vTeamList.$data.teamlist = res.teamlist;
+            }).error(function(err){
+                console.log(err);
+            })
+        }
+    });
+
+    //成员列表
+    var vMemberList = new Vue({
+        el: "#vMemberList",
+        data: {
+            members: []
+        },
+        methods: {
+            createPrivateChat: function(e){
+                var id = $(e.target).data('privateid');
+                var nickname = $(e.target).text();
+                vPrivateChatList.addItem({id: id, nickname: nickname, number: 0});
+            }
+        },
+        created: function(){
+            $.ajax({
+                type: 'get',
+                url: '/api/getMembersByTeam/' + location.pathname.split('/')[2],
+            }).done(function(res){
+                vMemberList.$data.members = res.members;
+            });
+        }
+    });
+
+    //私聊列表
+    var vPrivateChatList = new Vue({
+        el: "#vChatList",
+        data: {
+            lists: []
+        },
+        methods: {
+            addItem: function(n_item){
+                var isContain = false;
+                this.lists.map(function(item, index){
+                   if(item.id == n_item.id){
+                       isContain = true;
+                   }
+                });
+                !isContain && this.lists.push(n_item);
+                console.log(this.lists);
+            },
+            dismiss: function(e){
+                var id = $(e.target).data('id');
+                var _index = -1;
+                this.lists.map(function(item, index, arrs){
+                    if(item.id == id){
+                        _index = index;
+                    }
+                });
+                if(_index != -1){
+                    this.lists.splice(_index, 1);
+                }
+            },
+            chatTo: function(e){
+                var id = $(e.target).data('chatid');
+                $(".topicName").text("私聊");
+                $(".returnGroupChat").css('visibility', 'visible');
+                getPrivateChatRecord(id);
+                currentPrivateChatId = id;
+                this.lists.map(function(item, index){
+                    if(item.id == id) item.number = 0;
+                });
+            },
+            isContain: function(id){
+                var isContain = false;
+                this.lists.map(function(item, index){
+                   if(item.id == id) isContain = true;
+                });
+                return isContain;
+            },
+            addNum: function(id){
+                this.lists.map(function(item, index){
+                    if(item.id == id){
+                        item.number = parseInt(item.number, 10) + 1;
+                    }
+                })
+            }
+        }
+    });
+
+    var vTodo = new Vue({
         el: ".todoBox",
         data: {
             todos: [{id: '11223',task: '学习Js', done: false}, {id: '22334', task: '接着学Js', done: false}]
@@ -188,9 +290,6 @@ $(function(){
                 console.log(e.target.value);
                 this.todos.push({id: id,task: e.target.value, done: false});
                 e.target.value = "";
-            },
-            delTodo: function(todo){
-                this.todos.$remove(todo);
             },
             delCompleted: function(){
                 this.todos = this.todos.filter(function(todo){
@@ -253,9 +352,64 @@ $(function(){
         window.open(downloadURL);
     });
 
+    //Vue.config.debug = true;
+    Vue.filter('parseImg', function(msg){
+        var realMsg = msg.replace(/<{([a-z]+)}>/g, function(match){
+            return "<img src='/emoji/" + match.slice(2, -2) + ".gif' class='emojied'>";
+        });
+        realMsg = realMsg.replace(/\[-(\w+\.\w+)-\]/g, function(match){
+            return "<img src='/upload/" + match.slice(2, -2) + "' class='imageMsg'>";
+        });
+        realMsg = marked(realMsg);
+
+        return realMsg;
+    });
+
     var vChatList = new Vue({
-        
-    })
+        el: "#vRecord",
+        data: {
+            recordlist: []
+        }
+    });
+
+    function getChatRecord(teamid, to){
+        $.ajax({
+            url: '/record/public',
+            type: 'POST',
+            data: {
+                teamid: teamid,
+                to: to
+            }
+        }).done(function(res){
+            if(res.success == 1){
+                var getRecord = Promise.resolve(vChatList.$data.recordlist = res.chatrecord.recordList);
+                getRecord.then(function(){
+                    var t = setTimeout(function(){$("#iscroll").scrollTop(99999);}, 100);
+                });
+            }else{
+                alert('unknow error...');
+            }
+        });
+    }
+
+    function getPrivateChatRecord(to){
+        $.ajax({
+            url: '/record/private',
+            type: 'POST',
+            data: {
+                to: to
+            }
+        }).done(function(res){
+            if(res.success == 1){
+                var getRecord = Promise.resolve(vChatList.$data.recordlist = res.chatrecord.recordList);
+                getRecord.then(function(){
+                    var t = setTimeout(function(){$("#iscroll").scrollTop(99999);}, 100);
+                });
+            }else{
+                alert('unknow error...');
+            }
+        });
+    }
 
     function upload(type){
         var mimeType = ['image/jpeg', 'image/png', 'image/gif', 'application/zip', 'text/plain', 'application/pdf', 'application/msword'];
@@ -296,61 +450,13 @@ $(function(){
                         });
                     }
                     fr.readAsDataURL(file);
-                    console.log('- -!');
                 }else{
                     ;
                 }
             }
-
-
-
         });
     }
 });
-
-function getChatRecord(teamid, to){
-    $.ajax({
-        url: '/record/public',
-        type: 'POST',
-        data: {
-            teamid: teamid,
-            to: to
-        }
-    }).done(function(res){
-        if(res.success == 1){
-            initialMessageBox(res.chatrecord);
-        }else{
-            alert('unknow error...');
-        }
-    });
-}
-
-function getPrivateChatRecord(to){
-    $.ajax({
-        url: '/record/private',
-        type: 'POST',
-        data: {
-            to: to
-        }
-    }).done(function(res){
-        if(res.success == 1){
-            initialMessageBox(res.chatrecord);
-        }else{
-            alert('unknow error...');
-        }
-    });
-    console.log(currentPrivateChatId);
-}
-
-
-//
-function initialMessageBox(record){
-    $(".messageBox").empty();
-    for(var i = 0; i < record.recordList.length; i++){
-        addToMessageBox(record.recordList[i].id, record.recordList[i].nickname, record.recordList[i].photo, record.recordList[i].msg);
-    }
-    $("#iscroll").scrollTop(99999);
-}
 
 function removeFromList(id){
     var aimItemStr = ".chatList>li[data-privateid = " + id +"]";
@@ -360,67 +466,11 @@ function removeFromList(id){
     }
 }
 
-//切换到私聊页面
-function privateChatTo(id){
-    $(".private[data-id=" + id + "]").text('');
-    $(".topicName").text("私聊");
-    $(".returnGroupChat").css('visibility', 'visible');
-    getPrivateChatRecord(id);
-    currentPrivateChatId = id;
-    console.log('当前私聊对象id为' + id);
-}
-
-//判断私聊列表中是否有指定项
-function isContain(id){
-    var aimItemStr = ".chatList>li[data-privateid = " + id +"]";
-    var aimItem = $(aimItemStr);
-    if(aimItem.length > 0){
-        return true;
-    }else{
-        return false;
-    }
-}
-
 function returnGroupChat(){
     $(".topicName").text("群聊");
     $(".returnGroupChat").css('visibility', 'hidden');
     currentPrivateChatId = "all";
 }
-
-function createPrivateChatItem(text, id) {
-    var item = $("<li class='listitem' data-privateid='" + id + "'>" +
-        "<span class='badge private' data-id=" + id + ">1</span>" +
-        "<a href='javascript:void(0);' class='privateChatItem' data-privateid='" + id + "' onclick='privateChatTo(" + id + ")'>" + text + "</a>" +
-        "<span class='cancle' data-privateid='" + id + "' onClick='removeFromList(" + id + ")'>×</span>" +
-        "</li>");
-    $(".chatList").append(item);
-}
-
-//
-function addToMessageBox(id, nickname, photo, msg){
-    var $messageBox = $(".messageBox");
-    //var photo = nickname.slice(0, 1);
-    var realMsg = msg.replace(/<{([a-z]+)}>/g, function(match){
-        return "<img src='/emoji/" + match.slice(2, -2) + ".gif' class='emojied'>";
-    });
-    realMsg = realMsg.replace(/\[-(\w+\.\w+)-\]/g, function(match){
-        console.log(match);
-        return "<img src='/upload/" + match.slice(2, -2) + "' class='imageMsg'>";
-    });
-    realMsg = marked(realMsg);
-    var $mediaItem = $("<div class='media'>" +
-                            "<div class='media-left media-top'>" +
-                                "<img src='" + photo + "'/>" +
-                            "</div>" +
-                            "<div class='media-body'>" +
-                                "<h4 class='media-heading'>" + nickname + "</h4>" +
-                                realMsg +
-                            "</div>" +
-                      "</div>");
-    $messageBox.append($mediaItem);
-}
-
-
 
 (function($) {
     $.fn.extend({

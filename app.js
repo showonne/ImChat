@@ -1,8 +1,3 @@
-//import 'babel-polyfill';
-//
-//require("babel-core/register");
-//
-//import  express from 'express';
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -15,6 +10,7 @@ var routes = require('./routes/index');
 var teams = require('./routes/teams');
 var records = require('./routes/records');
 var chating = require('./routes/chating');
+var apis = require('./routes/api');
 
 var db = require('./db.js');
 
@@ -47,6 +43,7 @@ app.use('/', routes);
 app.use('/record', records);
 app.use('/team', teams);
 app.use('/chating', chating);
+app.use('/api', apis);
 
 // catch 404 and forward to error handler
 app.use(function(req, res){
