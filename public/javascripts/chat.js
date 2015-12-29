@@ -244,6 +244,10 @@ $(function(){
                 if(_index != -1){
                     this.lists.splice(_index, 1);
                 }
+                console.log(this.lists);
+                if(this.lists.length == 0){
+                    returnGroupChat();
+                }
             },
             chatTo: function(e){
                 var id = $(e.target).data('chatid');
@@ -457,14 +461,6 @@ $(function(){
         });
     }
 });
-
-function removeFromList(id){
-    var aimItemStr = ".chatList>li[data-privateid = " + id +"]";
-    $(aimItemStr).remove();
-    if(currentPrivateChatId == id){
-        returnGroupChat();
-    }
-}
 
 function returnGroupChat(){
     $(".topicName").text("群聊");
