@@ -40,34 +40,25 @@ router.post('/create', function(req, res){
 //聊天界面,最主要的界面
 router.get('/:teamid', utils.checkLogin);
 router.get('/:teamid', function(req, res){
-    var eq = new EventProxy();
-    eq.all('getAccount', 'getCurrentTeam', function(account, team){
-
-        eq2 = new EventProxy();
-        eq2.all('getTeamsByAccount', 'getMembersByTeam', function(teamlist, members){
-            console.log(members);
-            res.render('chat', {
-                account: account, //当前用户信息
-                currentteam: team, //当前团队信息
-                teamlist: teamlist, //当前用户所有的团队信息
-                members: members //当前团队所有人员
-            });
+    var ep = new EventProxy();
+    ep.all('getAccount', 'getCurrentTeam', function(account, team){
+        res.render('chat', {
+            account: account, //当前用户信息
+            currentteam: team, //当前团队信息
         });
-        getTeamsByAccount(account);
-        getMembersByTeam(team);
     });
 
     Account.find({id: req.session.account.id}, function(err, account){
         if(err){
             console.log(err);
         }
-        eq.emit('getAccount', account[0]);
+        ep.emit('getAccount', account[0]);
     });
     Team.find({id: req.params.teamid}, function(err, team){
         if(err){
             console.log(err);
         }
-        eq.emit('getCurrentTeam', team[0]);
+        ep.emit('getCurrentTeam', team[0]);
     });
 
 });
@@ -154,38 +145,6 @@ router.post('/leave', function(req, res){
     });
 
 });
-
-
-
-function getTeamsByAccount(account){
-    var teams = account.teams;
-    var teamlist1 = [];
-    Team.find({id: {$in: teams}}, function(err, teamlist){
-        if(err){
-            console.log(err);
-        }else{
-            teamlist1 = teamlist;
-            eq2.emit('getTeamsByAccount', teamlist1);
-        }
-    });
-}
-
-function getMembersByTeam(team){
-    var members =[];
-    team.members.forEach(function(item){
-        Account.find({id: item}, function(err, accountinfo){
-            if(err){
-                console.log(err);
-            }else{
-                members.push(accountinfo[0]);
-                if(members.length == team.members.length){
-                    eq2.emit('getMembersByTeam', members);
-                }
-            }
-        })
-    });
-}
-
 
 
 

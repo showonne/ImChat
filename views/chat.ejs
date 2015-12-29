@@ -5,7 +5,6 @@
     <title>Chat</title>
     <% include dependence.ejs %>
     <link rel="stylesheet" href="/stylesheets/chat.min.css"/>
-    <!--<script src="/notie/notie.js"></script>-->
     <script src="/socket.io/socket.io.js"></script>
     <script src="/javascripts/vue.js"></script>
     <script src="/javascripts/lodash.min.js"></script>
@@ -21,10 +20,10 @@
                 <div class="memberTitle">
                     <span class="title">其他成员</span>
                 </div>
-                <ul class="memberList">
-                    <% members.forEach(function(item){ %>
-                        <li class="listitem"><a href="javascript:void(0);" class="privateChat" data-privateid="<%= item.id %>"><%= item.nickname %></a></li>
-                    <% }) %>
+                <ul class="memberList" id="vMemberList">
+                    <li v-for="member in members" class="listitem">
+                        <a href="javascript:void(0);" class="privateChat" data-privateid="{{ member.id }}" @click="createPrivateChat">{{ member.nickname }}</a>
+                    </li>
                 </ul>
             </div>
             <div class="more" data-toggle="modal" data-target="#invate">邀请更多成员...</div>
@@ -33,7 +32,14 @@
                 <div class="chatTitle">
                     <span class="title">》私聊列表</span>
                 </div>
-                <ul class="chatList">
+                <ul class="chatList" id="vChatList">
+                    <template v-for="item in lists">
+                        <li class="listitem" data-privateid="{{ item.id }}" @click="chatTo">
+                            <span class="badge private">{{ item.number == 0 ? "" : item.number }}</span>
+                            <a href="javascrupt: void(0);" @click="chatTo" data-chatid="{{ item.id }}">{{ item.nickname }}</a>
+                            <span class="cancle" data-id="{{ item.id }}" @click="dismiss">x</span>
+                        </li>
+                    </template>
                 </ul>
             </div>
             <div class="settings">
@@ -53,24 +59,35 @@
             </div>
             <div class="chatBox">
                 <div id="iscroll">
-                    <div class="messageBox">
+                    <div class="messageBox" id="vRecord">
+                        <template  v-for="record in recordlist">
+                            <div class="media">
+                                <div class="media-left media-top">
+                                    <img src="{{ record.photo }}" alt=""/>
+                                </div>
+                                <div class="media-body">
+                                    <h4 class="media-heading">{{ record.nickname }}</h4>
+                                    {{{ record.msg | parseImg }}}
+                                </div>
+                            </div>
+                        </template>
                     </div>
                 </div>
                 <!-- 右侧弹出框 -->
                 <div class="todoBox">
                     <div class="todoHeader">
                         <h4 class="todoTitle">待办事项小记</h4>
-                        <button v-on="click: delCompleted" class="btn btn-primary">删除已完成任务</button>
+                        <button @click="delCompleted" class="btn btn-primary">删除已完成任务</button>
                     </div>
                     <ul>
-                        <li v-repeat="todo in todos" v-on="click: done = !done">
-                            <div class="todoItem">
-                                <input type="checkbox" id="{{ todo.id }}" v-on="click: todo.done = !todo.done" />
+                        <li v-for="todo in todos" >
+                            <div class="todoItem" >
+                                <input type="checkbox" id="{{ todo.id }}" @click= "todo.done = !todo.done" />
                                 <label for="{{ todo.id }}" >{{ todo.task }}</label>
                             </div>
                         </li>
                     </ul>
-                    <input class="newTodo" type="text" v-on="keydown: addTodo | key 13" placeholder="又有事情做了？">
+                    <input class="newTodo" type="text" @keyup.13="addTodo" placeholder="又有事情做了？">
                 </div>
                 <div class="fileBox">
                     <h4 class="fileTitle">群组文件</h4>
@@ -99,10 +116,10 @@
                         <div class="teamtitle">我的团队</div>
                     </div>
                     <div class="modal-body">
-                        <ul class="list-group">
-                            <% for(var i = 0; i < teamlist.length; i++){ %>
-                            <li class="teamitem list-group-item"><a href="/team/<%= teamlist[i].id%>"><%= teamlist[i].teamname %></a></li>
-                            <% } %>
+                        <ul class="list-group" id="vTeamList">
+                            <li v-for="team in teamlist" class="teamitem list-group-item">
+                                <a href="/team/{{ team.id }}" >{{ team.teamname }}</a>
+                            </li>
                         </ul>
                     </div>
                     <div class="modal-footer">
