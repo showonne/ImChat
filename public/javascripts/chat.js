@@ -42,7 +42,7 @@ $(function(){
                             photo: currentphoto
                         });
                     }else{
-                        console.log("unknow server error...");
+                        notie.alert(3, 'unknow error', 1.5);
                     }
                 });
             }else{
@@ -72,7 +72,7 @@ $(function(){
                             $("#iscroll").scrollTop(initialScroll + increasement + 15);
                         });
                     }else{
-                        console.log("unknow server error...");
+                        notie.alert(3, 'unknow server error...');
                     }
                 });
             }
@@ -98,7 +98,6 @@ $(function(){
     });
     //接收消息(私聊)
     socket.on('replyPriMsg', function(data){
-        console.log(vPrivateChatList.isContain(data.from));
         if(vPrivateChatList.isContain(data.from)){
             //如果是在自言自语 - -！
             if(currentPrivateChatId ==  data.from){
@@ -205,7 +204,6 @@ $(function(){
 
     window.addEventListener('popstate', function(){
         var originId = $(".teamBtn").data('teamid');
-        console.log(originId);
         if(history.state != null){
             $.ajax({
                 type: 'get',
@@ -234,8 +232,6 @@ $(function(){
         }
 
     });
-
-    console.log(history.state);
 
     //成员列表
     var vMemberList = new Vue({
@@ -275,7 +271,6 @@ $(function(){
                    }
                 });
                 !isContain && this.lists.push(n_item);
-                console.log(this.lists);
             },
             dismiss: function(e){
                 var id = $(e.target).data('id');
@@ -334,7 +329,6 @@ $(function(){
         methods: {
             addTodo: function(e){
                 var id = Math.floor(Math.random() * 100000).toString() + new Date().getTime().toString();
-                console.log(e.target.value);
                 this.todos.push({id: id,task: e.target.value, done: false});
                 e.target.value = "";
             },
@@ -470,7 +464,7 @@ $(function(){
                 mimeIndex = _.indexOf(mimeType, file.type);
 
             if(mimeIndex == -1 ||  mimeIndex > 2){
-                alert('请选择正确的图片!');
+                notie.alert(3, '请选择正确的图片!', 2.5);
                 return ;
             }else{
                 var fr = new FileReader();
@@ -491,7 +485,7 @@ $(function(){
                                 var imgContent = "[-" + res.imgsrc + "-]";
                                 $input.insertContent(imgContent);
                             } else {
-                                console.log('unknow error');
+                                notie.alert(3, 'unknow error...', 2.5);
                             }
                         });
                     }
@@ -504,8 +498,8 @@ $(function(){
 
 
     $(".file_file").change(function(){
-        var file = this.files[0];
         if(this.files.length != 0) {
+            var file = this.files[0];
             var fr = new FileReader();
             if (file) {
                 fr.onload = function (evt) {
@@ -521,9 +515,9 @@ $(function(){
                         contentType: false
                     }).done(function (res) {
                         if (res.success == 1) {
-                            alert(res.originalname + '上传完成!');
+                            notie.alert(1, res.originalname + '上传完成!', 1.5);
                         } else {
-                            console.log('unknow error');
+                            notie.alert(3, 'unknow error', 1.5);
                         }
                     });
                 }
@@ -532,7 +526,7 @@ $(function(){
                 ;
             }
         }else{
-            alert('未选择文件，不进行处理');
+            notie.alert(3, '未选择文件，不进行处理', 1.5);
         }
     });
 });
