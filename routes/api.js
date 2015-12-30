@@ -43,4 +43,14 @@ router.get('/getMembersByTeam/:teamid', function(req, res){
     })
 });
 
+router.get('/getTeamInfo/:teamid', function(req, res){
+    Team.findOne({id: req.params.teamid}, function(err, team){
+       if(err){
+           console.log(err);
+       }else{
+           res.json({success: 1, team: team});
+       }
+    });
+});
+
 module.exports = router;

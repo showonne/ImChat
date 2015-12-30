@@ -36,7 +36,7 @@
                     <template v-for="item in lists">
                         <li class="listitem" data-privateid="{{ item.id }}" @click="chatTo">
                             <span class="badge private">{{ item.number == 0 ? "" : item.number }}</span>
-                            <a href="javascrupt: void(0);" @click="chatTo" data-chatid="{{ item.id }}">{{ item.nickname }}</a>
+                            <a href="javascrupt: void(0);" @click="chatTo" data-privateid="{{ item.id }}">{{ item.nickname }}</a>
                             <span class="cancle" data-id="{{ item.id }}" @click="dismiss">x</span>
                         </li>
                     </template>
@@ -99,10 +99,14 @@
             <div class="inputBox">
                 <div class="toolbar">
                     <a href="javascript:void(0);" class="emoji"><img src="/images/iconfont-biaoqing.png" alt=""/></a>
-                    <a href="javascript:void(0);" class="image"><img src="/images/iconfont-tupian.png" alt=""/></a>
-                    <a href="javascript:void(0);" class="file"><img src="/images/iconfont-files.png" alt=""/></a>
-                    <input type="file" class="image_file" style="visibility: hidden;"/>
-                    <input type="file" class="file_file" style="visibility: hidden;"/>
+                    <a href="javascript:void(0);" class="image inputContainer">
+                        <img src="/images/iconfont-tupian.png" alt=""/>
+                        <input type="file" class="image_file"/>
+                    </a>
+                    <a href="javascript:void(0);" class="file inputContainer">
+                        <img src="/images/iconfont-files.png" alt=""/>
+                        <input type="file" class="file_file"/>
+                    </a>
                 </div>
                 <textarea name="inputContent" id="inputContent" placeholder="说点什么呢..." spellcheck="false"></textarea>
                 <span>输入Shift + Enter 发送</span>
@@ -118,7 +122,7 @@
                     <div class="modal-body">
                         <ul class="list-group" id="vTeamList">
                             <li v-for="team in teamlist" class="teamitem list-group-item">
-                                <a href="/team/{{ team.id }}" >{{ team.teamname }}</a>
+                                <a href="javascript: void(0);" data-teamid="{{ team.id }}" @click="chTeam">{{ team.teamname }}</a>
                             </li>
                         </ul>
                     </div>

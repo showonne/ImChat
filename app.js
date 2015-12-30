@@ -104,7 +104,14 @@ io.on('connection', function(socket){
     }
   });
 
+  socket.on('leave', function(data){
+    socketArr[data.account].leave(data.originteam, function(){
+      console.log('leaved room : ' + data.originteam);
+    });
+  });
+
   socket.on('disconnect', function(){
     console.log("a user leaved...");
   });
-})
+});
+

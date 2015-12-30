@@ -138,33 +138,12 @@ $(function(){
         });
     });
 
-    //发送表情功能
-    $(".emoji").click(function(){
-       $(".emojiBox").toggle();
-    });
-    $(".image").click(function(){
-        upload('image');
-    });
-    $(".file").click(function(){
-        upload('file');
-    });
-
     $(".emojiItem").click(function(){
         var mean = "<{" + $(this).data("mean") + "}>";
         $input.insertContent(mean);
         $(".emojiBox").toggle();
     });
-    //进行私聊的相关操作
-    var $privateChat = $(".privateChat");
-    //将团队中的人添加到私聊列表中
-    $privateChat.click(function(){
-        if(vPrivateChatList.isContain($(this).data('privateid'))){
-            createPrivateChatItem($(this).text(), $(this).data('privateid'));
-            $(".private[data-id=" + $(this).data('privateid') + "]").text('');
-        }else{
-            return ;
-        }
-    });
+
     //返回群聊
     $(".returnGroupChat").click(function(){
         $(".badge.return").text('');
@@ -190,8 +169,73 @@ $(function(){
             }).error(function(err){
                 console.log(err);
             })
+        },
+        methods: {
+            chTeam: function(e){
+                var originId = $(".teamBtn").data('teamid');
+                var id = $(e.target).data('teamid');
+                history.pushState({teamid: id}, '', location.origin + '/team/' + id);
+                $.ajax({
+                    type: 'get',
+                    url: '/api/getTeamInfo/' + id,
+                }).done(function(res){
+                    if(res.success == 1){
+                        $(".teamBtn").empty().text(res.team.teamname);
+                        $(".teamBtn").data('teamid', res.team.id);
+                        currentteam = res.team.id;
+
+                        socket.emit('leave', {
+                            account: currentaccount,
+                            originteam: originId
+                        });
+
+                        socket.emit('join', {
+                            teamid: res.team.id,
+                            accountid: currentaccount
+                        });
+                        getChatRecord(currentteam, 'all');
+                    }
+                    $("#teamList").modal('hide');
+                })
+            }
         }
     });
+
+    history.pushState({teamid: currentteam}, '');
+
+    window.addEventListener('popstate', function(){
+        var originId = $(".teamBtn").data('teamid');
+        console.log(originId);
+        if(history.state != null){
+            $.ajax({
+                type: 'get',
+                url: '/api/getTeamInfo/' + history.state.teamid,
+            }).done(function(res){
+                if(res.success == 1){
+                    $(".teamBtn").empty().text(res.team.teamname);
+                    $(".teamBtn").data('teamid', res.team.id);
+                    currentteam = res.team.id;
+
+                    socket.emit('leave', {
+                        account: currentaccount,
+                        originteam: originId
+                    });
+
+                    socket.emit('join', {
+                        teamid: res.team.id,
+                        accountid: currentaccount
+                    });
+                    getChatRecord(currentteam, 'all');
+                }
+                $("#teamList").modal('hide');
+            })
+        }else{
+            ;
+        }
+
+    });
+
+    console.log(history.state);
 
     //成员列表
     var vMemberList = new Vue({
@@ -244,7 +288,6 @@ $(function(){
                 if(_index != -1){
                     this.lists.splice(_index, 1);
                 }
-                console.log(this.lists);
                 if(this.lists.length == 0){
                     returnGroupChat();
                 }
@@ -415,24 +458,27 @@ $(function(){
         });
     }
 
-    function upload(type){
-        var mimeType = ['image/jpeg', 'image/png', 'image/gif', 'application/zip', 'text/plain', 'application/pdf', 'application/msword'];
-        $("." + type + "_file").click();
+    //发送表情功能
+    $(".emoji").click(function(){
+        $(".emojiBox").toggle();
+    });
 
-        $("." + type + "_file").change(function(){
-            var file = $("." + type + "_file")[0].files[0],
+    $(".image_file").change(function(e){
+        var mimeType = ['image/jpeg', 'image/png', 'image/gif', 'application/zip', 'text/plain', 'application/pdf', 'application/msword'];
+        if(this.files.length != 0){
+            var file = this.files[0],
                 mimeIndex = _.indexOf(mimeType, file.type);
 
-            if(mimeIndex == -1 || (type == 'image' && mimeIndex > 2)){
-                console.log('暂时不支持该类型文件!');
-                return;
+            if(mimeIndex == -1 ||  mimeIndex > 2){
+                alert('请选择正确的图片!');
+                return ;
             }else{
                 var fr = new FileReader();
                 if(file){
-                    fr.onload = function(evt){
+                    fr.onload = function (evt) {
                         var fd = new FormData();
                         fd.append('file', file);
-                        fd.append('uploadType', type);
+                        fd.append('uploadType', 'image');
                         fd.append('teamId', location.pathname.split('/')[2]);
                         $.ajax({
                             url: '/upload',
@@ -440,26 +486,55 @@ $(function(){
                             data: fd,
                             processData: false,
                             contentType: false
-                        }).done(function(res){
-                            if(res.success == 1){
-                                if(type == 'image'){
-                                    var imgContent = "[-" + res.imgsrc + "-]";
-                                    $input.insertContent(imgContent);
-                                }else{
-                                    alert(res.originalname + '上传完成!' );
-                                }
-                            }else{
+                        }).done(function (res) {
+                            if (res.success == 1) {
+                                var imgContent = "[-" + res.imgsrc + "-]";
+                                $input.insertContent(imgContent);
+                            } else {
                                 console.log('unknow error');
                             }
                         });
                     }
                     fr.readAsDataURL(file);
-                }else{
-                    ;
                 }
             }
-        });
-    }
+        }
+    });
+
+
+
+    $(".file_file").change(function(){
+        var file = this.files[0];
+        if(this.files.length != 0) {
+            var fr = new FileReader();
+            if (file) {
+                fr.onload = function (evt) {
+                    var fd = new FormData();
+                    fd.append('file', file);
+                    fd.append('uploadType', 'file');
+                    fd.append('teamId', location.pathname.split('/')[2]);
+                    $.ajax({
+                        url: '/upload',
+                        type: 'POST',
+                        data: fd,
+                        processData: false,
+                        contentType: false
+                    }).done(function (res) {
+                        if (res.success == 1) {
+                            alert(res.originalname + '上传完成!');
+                        } else {
+                            console.log('unknow error');
+                        }
+                    });
+                }
+                fr.readAsDataURL(file);
+            } else {
+                ;
+            }
+        }else{
+            alert('未选择文件，不进行处理');
+        }
+    });
 });
 
 function returnGroupChat(){

@@ -48,17 +48,17 @@ router.get('/:teamid', function(req, res){
         });
     });
 
-    Account.find({id: req.session.account.id}, function(err, account){
+    Account.findOne({id: req.session.account.id}, function(err, account){
         if(err){
             console.log(err);
         }
-        ep.emit('getAccount', account[0]);
+        ep.emit('getAccount', account);
     });
-    Team.find({id: req.params.teamid}, function(err, team){
+    Team.findOne({id: req.params.teamid}, function(err, team){
         if(err){
             console.log(err);
         }
-        ep.emit('getCurrentTeam', team[0]);
+        ep.emit('getCurrentTeam', team);
     });
 
 });

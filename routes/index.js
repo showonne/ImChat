@@ -12,34 +12,29 @@ router.get('/', function(req, res) {
 
 router.post('/logon', utils.checkNotLogin);
 router.post('/logon', function(req, res){
-  Account.find({account: req.body.account}, function(err, account){
+  Account.logOnValidate(req.body.account, req.body.password, function(err, result){
     if(err){
       console.log(err);
     }else{
-      if(account.length == 0){
-        res.json({success: 0, msg: '用户名不存在.'});
+      if(result.success == 0 ){
+        res.json(result);
       }else{
-        var password = utils.getHashPassword(req.body.password);
-        if(password != account[0].password){
-          res.json({success: 0, msg: '密码错误.'});
+        if(result.account.teams.length > 0){
+          Team.find({id: {$in: result.account.teams}}, function(err, team){
+            if(err){
+              console.log(err);
+            }else{
+              req.session.account = result.account;
+              var redirecturl = '/team/' + team[0].id;
+              res.json({
+                success: 1,
+                redirecturl: redirecturl
+              });
+            }
+          });
         }else{
-          if(account[0].teams.length > 0){
-            Team.find({id: {$in: account[0].teams}}, function(err, team){
-              if(err){
-                console.log(err);
-              }else{
-                req.session.account = account[0];
-                var redirecturl = '/team/' + team[0].id;
-                res.json({
-                  success: 1,
-                  redirecturl: redirecturl
-                });
-              }
-            });
-          }else{
-            req.session.account = account[0];
-            res.json({success: 1, redirecturl: '/team/create'});
-          }
+          req.session.account = account[0];
+          res.json({success: 1, redirecturl: '/team/create'});
         }
       }
     }
