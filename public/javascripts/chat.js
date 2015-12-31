@@ -81,6 +81,7 @@ $(function(){
             return ;
         }
     });
+
     //接收消息功能(群聊)
     socket.on('replyMsg', function(data){
         if(currentPrivateChatId == 'all'){
@@ -96,6 +97,7 @@ $(function(){
             $returnBadge.text(number);
         }
     });
+
     //接收消息(私聊)
     socket.on('replyPriMsg', function(data){
         if(vPrivateChatList.isContain(data.from)){
@@ -120,6 +122,7 @@ $(function(){
         var link = window.location.href + "/invate";
         $(".invate_link").text(link);
     });
+
     //添加
     $("#addTeamBtn").click(function(){
         $.ajax({
@@ -193,6 +196,7 @@ $(function(){
                             accountid: currentaccount
                         });
                         getChatRecord(currentteam, 'all');
+                        vMemberList.reload();
                     }
                     $("#teamList").modal('hide');
                 })
@@ -200,37 +204,16 @@ $(function(){
         }
     });
 
-    history.pushState({teamid: currentteam}, '');
+    Vue.filter('parseImg', function(msg){
+        var realMsg = msg.replace(/<{([a-z]+)}>/g, function(match){
+            return "<img src='/emoji/" + match.slice(2, -2) + ".gif' class='emojied'>";
+        });
+        realMsg = realMsg.replace(/\[-(\w+\.\w+)-\]/g, function(match){
+            return "<img src='/upload/" + match.slice(2, -2) + "' class='imageMsg'>";
+        });
+        realMsg = marked(realMsg);
 
-    window.addEventListener('popstate', function(){
-        var originId = $(".teamBtn").data('teamid');
-        if(history.state != null){
-            $.ajax({
-                type: 'get',
-                url: '/api/getTeamInfo/' + history.state.teamid,
-            }).done(function(res){
-                if(res.success == 1){
-                    $(".teamBtn").empty().text(res.team.teamname);
-                    $(".teamBtn").data('teamid', res.team.id);
-                    currentteam = res.team.id;
-
-                    socket.emit('leave', {
-                        account: currentaccount,
-                        originteam: originId
-                    });
-
-                    socket.emit('join', {
-                        teamid: res.team.id,
-                        accountid: currentaccount
-                    });
-                    getChatRecord(currentteam, 'all');
-                }
-                $("#teamList").modal('hide');
-            })
-        }else{
-            ;
-        }
-
+        return realMsg;
     });
 
     //成员列表
@@ -240,6 +223,14 @@ $(function(){
             members: []
         },
         methods: {
+            reload: function(){
+                $.ajax({
+                    type: 'get',
+                    url: '/api/getMembersByTeam/' + location.pathname.split('/')[2],
+                }).done(function(res){
+                    vMemberList.$data.members = res.members;
+                });
+            },
             createPrivateChat: function(e){
                 var id = $(e.target).data('privateid');
                 var nickname = $(e.target).text();
@@ -253,7 +244,7 @@ $(function(){
             }).done(function(res){
                 vMemberList.$data.members = res.members;
             });
-        }
+        },
     });
 
     //私聊列表
@@ -350,60 +341,41 @@ $(function(){
             $(".todoBox").css("transform", "translate(0, 0)");
             isTodoShow = true;
         }
-    })
+    });
 
     $(".fileToggle").click(function(){
-        $ul = $(".fileBox ul");
-        var icon = {
-            'zip': '&#xe630;',
-            'pdf': '&#xe63f;',
-            'txt': '&#xe6d7;'
-        };
-
         if(isFileShow){
             $(".fileBox").css("transform", "translate(400px, 0)");
             isFileShow = false;
         }else{
-            $.ajax({
-                url: '/getfiles',
-                type: 'post',
-                data: {teamId: location.pathname.split('/')[2]}
-            }).done(function(res){
-                if(res.success == 1){
-                    var files= res.files;
-                    $ul.empty();
-                    files.map(function(item, index){
-                        var type = item.src.split('.')[1];
-                        var $newItem = "<li><i class='iconfont'>" +  icon[type] + "</i><div class='download " + type + "' data-source='"+ item.src + "'>" + item.originalname + "</div></li>";
-                        $ul.append($newItem);
-                    });
-
-                    $(".fileBox").css("transform", "translate(0, 0)");
-                    isFileShow = true;
-                }
-            });
+            $(".fileBox").css("transform", "translate(0, 0)");
+            isFileShow = true;
         }
     });
 
-    $(document.body).delegate('.download', 'click', function(e){
-        e.preventDefault();
-        var dataSrc = $(this).data('source'),
-            fileName = $(this).text();
-        var downloadURL = '/download?src=' + dataSrc + "&fileName=" + fileName;
-        window.open(downloadURL);
-    });
-
-    //Vue.config.debug = true;
-    Vue.filter('parseImg', function(msg){
-        var realMsg = msg.replace(/<{([a-z]+)}>/g, function(match){
-            return "<img src='/emoji/" + match.slice(2, -2) + ".gif' class='emojied'>";
-        });
-        realMsg = realMsg.replace(/\[-(\w+\.\w+)-\]/g, function(match){
-            return "<img src='/upload/" + match.slice(2, -2) + "' class='imageMsg'>";
-        });
-        realMsg = marked(realMsg);
-
-        return realMsg;
+    var vFileBox = new Vue({
+        el: "#vFileBox",
+        data: {
+            files: []
+        },
+        created: function(){
+            var that = this;
+            $.ajax({
+                url: '/getfiles/' + location.pathname.split('/')[2],
+            }).done(function(res){
+                if(res.success == 1){
+                    that.files = res.files;
+                }
+            });
+        },
+        methods: {
+            download: function(e){
+                var src = $(e.target).data('src'),
+                    fileName = $(e.target).text();
+                var downloadURL = '/download?src=' + src + "&fileName=" + fileName;
+                window.open(downloadURL);
+            }
+        }
     });
 
     var vChatList = new Vue({
@@ -411,6 +383,40 @@ $(function(){
         data: {
             recordlist: []
         }
+    });
+
+    history.pushState({teamid: currentteam}, '');
+
+    window.addEventListener('popstate', function(){
+        var originId = $(".teamBtn").data('teamid');
+        if(history.state != null){
+            $.ajax({
+                type: 'get',
+                url: '/api/getTeamInfo/' + history.state.teamid,
+            }).done(function(res){
+                if(res.success == 1){
+                    $(".teamBtn").empty().text(res.team.teamname);
+                    $(".teamBtn").data('teamid', res.team.id);
+                    currentteam = res.team.id;
+
+                    socket.emit('leave', {
+                        account: currentaccount,
+                        originteam: originId
+                    });
+
+                    socket.emit('join', {
+                        teamid: res.team.id,
+                        accountid: currentaccount
+                    });
+                    getChatRecord(currentteam, 'all');
+                    vMemberList.reload();
+                }
+                $("#teamList").modal('hide');
+            })
+        }else{
+            ;
+        }
+
     });
 
     function getChatRecord(teamid, to){
@@ -458,7 +464,7 @@ $(function(){
     });
 
     $(".image_file").change(function(e){
-        var mimeType = ['image/jpeg', 'image/png', 'image/gif', 'application/zip', 'text/plain', 'application/pdf', 'application/msword'];
+        var mimeType = ['image/jpeg', 'image/png', 'image/gif'];
         if(this.files.length != 0){
             var file = this.files[0],
                 mimeIndex = _.indexOf(mimeType, file.type);
@@ -467,30 +473,24 @@ $(function(){
                 notie.alert(3, '请选择正确的图片!', 2.5);
                 return ;
             }else{
-                var fr = new FileReader();
-                if(file){
-                    fr.onload = function (evt) {
-                        var fd = new FormData();
-                        fd.append('file', file);
-                        fd.append('uploadType', 'image');
-                        fd.append('teamId', location.pathname.split('/')[2]);
-                        $.ajax({
-                            url: '/upload',
-                            type: 'POST',
-                            data: fd,
-                            processData: false,
-                            contentType: false
-                        }).done(function (res) {
-                            if (res.success == 1) {
-                                var imgContent = "[-" + res.imgsrc + "-]";
-                                $input.insertContent(imgContent);
-                            } else {
-                                notie.alert(3, 'unknow error...', 2.5);
-                            }
-                        });
+                var fd = new FormData();
+                fd.append('file', file);
+                fd.append('uploadType', 'image');
+                fd.append('teamId', location.pathname.split('/')[2]);
+                $.ajax({
+                    url: '/upload',
+                    type: 'POST',
+                    data: fd,
+                    processData: false,
+                    contentType: false
+                }).done(function (res) {
+                    if (res.success == 1) {
+                        var imgContent = "[-" + res.imgsrc + "-]";
+                        $input.insertContent(imgContent);
+                    } else {
+                        notie.alert(3, 'unknow error...', 2.5);
                     }
-                    fr.readAsDataURL(file);
-                }
+                });
             }
         }
     });
@@ -500,31 +500,25 @@ $(function(){
     $(".file_file").change(function(){
         if(this.files.length != 0) {
             var file = this.files[0];
-            var fr = new FileReader();
-            if (file) {
-                fr.onload = function (evt) {
-                    var fd = new FormData();
-                    fd.append('file', file);
-                    fd.append('uploadType', 'file');
-                    fd.append('teamId', location.pathname.split('/')[2]);
-                    $.ajax({
-                        url: '/upload',
-                        type: 'POST',
-                        data: fd,
-                        processData: false,
-                        contentType: false
-                    }).done(function (res) {
-                        if (res.success == 1) {
-                            notie.alert(1, res.originalname + '上传完成!', 1.5);
-                        } else {
-                            notie.alert(3, 'unknow error', 1.5);
-                        }
-                    });
+            var fd = new FormData();
+            fd.append('file', file);
+            fd.append('uploadType', 'file');
+            fd.append('teamId', location.pathname.split('/')[2]);
+
+            $.ajax({
+                url: '/upload',
+                type: 'POST',
+                data: fd,
+                processData: false,
+                contentType: false
+            }).done(function (res) {
+                if (res.success == 1) {
+                    notie.alert(1, res.originalName + '上传完成!', 1.5);
+                } else {
+                    notie.alert(3, 'unknow error', 1.5);
                 }
-                fr.readAsDataURL(file);
-            } else {
-                ;
-            }
+            });
+
         }else{
             notie.alert(3, '未选择文件，不进行处理', 1.5);
         }

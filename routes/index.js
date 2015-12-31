@@ -5,6 +5,7 @@ var router = express.Router();
 var utils = require('../utils/utils.js');
 var Account = require('../models/accountModel');
 var Team = require('../models/teamModel');
+var File = require('../models/fileModel');
 
 router.get('/', function(req, res) {
   res.render('index', { title: '主页' });
@@ -119,22 +120,20 @@ router.post('/setting/personal', function(req, res){
 
 
 router.post('/upload', function(req, res){
-  console.log(req.files);
   if(req.body.uploadType == 'image'){
     res.json({success: 1, imgsrc: req.files.file.name});
   }else{
-    var teamId = req.body.teamId;
-    Team.update({id: teamId}, {$push: {files: {teamId: teamId, originalname: req.files.file.originalname, src: req.files.file.name}}}, function(err, result){
+    var n_file = new File({teamId: req.body.teamId, originalName: req.files.file.originalname, src: req.files.file.name});
+    n_file.save(function(err, file){
       if(err){
         console.log(err);
+        res.json({success: 0});
       }else{
-        if(result.ok == 1 && result.n == 1){
-          res.json({success: 1, src: req.files.file.name, originalname: req.files.file.originalname});
-        }else{
-          res.json({success: 0});
+        if(file._id != ''){
+          res.json({success: 1, src: file.src, originalName: file.originalName});
         }
       }
-    });
+    })
   }
 });
 
@@ -144,12 +143,11 @@ router.get('/download', function(req, res){
   res.download(src, fileName);
 });
 
-router.post('/getfiles', function(req, res){
-  Team.find({id: req.body.teamId}, {files: 1}, function(err, teams){
+router.get('/getfiles/:teamId', function(req, res){
+  File.find({teamId: req.params.teamId}, function(err, files){
     if(err){
       console.log(err);
     }else{
-      var files = teams[0].files;
       res.json({success: 1, files: files});
     }
   });

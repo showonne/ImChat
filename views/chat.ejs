@@ -89,9 +89,12 @@
                     </ul>
                     <input class="newTodo" type="text" @keyup.13="addTodo" placeholder="又有事情做了？">
                 </div>
-                <div class="fileBox">
+                <div class="fileBox" id="vFileBox">
                     <h4 class="fileTitle">群组文件</h4>
                     <ul class="filesGroup">
+                        <li v-for="file in files">
+                            <a href="javascript: void(0);" data-src="{{ file.src }}" @click="download">{{ file.originalName }}</a>
+                        </li>
                     </ul>
                 </div>
                 <!-- end -->
