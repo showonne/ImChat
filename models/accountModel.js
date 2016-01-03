@@ -9,7 +9,8 @@ Account.logOnValidate = function(account, password, callback){
         if(err){
             callback(err);
         }else{
-            if(account.length == 0){
+            console.log(account);
+            if(account == null){
                 callback(null, {success: 0, msg: '用户名不存在.'});
             }else{
                 var hash_password = utils.getHashPassword(password);

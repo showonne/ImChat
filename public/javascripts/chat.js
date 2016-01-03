@@ -279,13 +279,15 @@ $(function(){
                 }
             },
             chatTo: function(e){
-                var id = $(e.target).data('chatid');
+                var id = $(e.target).data('privateid');
                 $(".topicName").text("私聊");
                 $(".returnGroupChat").css('visibility', 'visible');
                 getPrivateChatRecord(id);
                 currentPrivateChatId = id;
                 this.lists.map(function(item, index){
-                    if(item.id == id) item.number = 0;
+                    if(item.id == id){
+                        item.number = 0;
+                    }
                 });
             },
             isContain: function(id){

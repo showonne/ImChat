@@ -128,6 +128,8 @@ ul{
         li{
           display: block;
           width: 100%;
+          display: flex;
+          align-items: center;
           &:hover{
             background-color: $cyan-hover;
             .cancle{
@@ -375,7 +377,7 @@ ul{
   width: 200px;
   height: 500px;
   left: 15%;
-  top: 65%;
+  top: 68%;
   .modal-dialog{
     padding: 0;
     margin: 0;
