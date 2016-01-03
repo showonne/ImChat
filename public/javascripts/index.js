@@ -1,110 +1,84 @@
-/**
- * Created by showonne on 15/9/25.
- */
-$(function(){
-    var $account = $(".login_account"),
-        $password = $(".login_password");
 
-    $(".logIn").click(function(){
-        var account = $account.val(),
-        password = $password.val();
-        if(account && password) {
-            $.ajax({
-                url: '/logon',
-                method: 'POST',
-                data: {
-                    account: account,
-                    password: password
+window.onload = function(){
+
+    var vApp = new Vue({
+        el: "#vApp",
+        data: {
+            selected: true,
+            notice: '',
+            login_account: '',
+            login_password: '',
+            register_account: '',
+            register_email: '',
+            register_password: '',
+            register_password_repeat: ''
+        },
+        methods: {
+            toggle: function(val){
+                this.selected = val;
+            },
+            isEmpty: function(strArr){
+                var is = false;
+                strArr.map(function(item){
+                    if(/^\s*$/i.test(item)){
+                        is = true;
+                    }
+                });
+                return is;
+            },
+            subLogin: function(){
+                if(this.isEmpty([this.login_account, this.login_password])){
+                    this.notice = "账号名或密码不许为空";
+                }else{
+                    $.ajax({
+                        url: '/logon',
+                        method: 'POST',
+                        data: {
+                            account: this.login_account,
+                            password: this.login_password
+                        }
+                    }).done(function (res) {
+                        if (res.success == 0) {
+                            vApp.$data.notice = res.msg;
+                        } else {
+                            window.location.href = res.redirecturl;
+                        }
+                    });
                 }
-            }).done(function (res) {
-                if (res.success == 0) {
-                    $(".notice").text(res.msg);
-                } else {
-                    window.location.href = res.redirecturl;
+            },
+            subRegister: function(){
+                if(this.isEmpty([this.register_account, this.register_password, this.register_email, this.register_password_repeat])){
+                    this.notice = "存在未填写选项";
+                }else{
+                    if(/\W|\_/i.test(this.register_account)){
+                        this.notice = "不允许使用空格,下划线等特殊字符为帐号.";
+                    }else{
+                        if(this.register_password != this.register_password_repeat){
+                            this.notice = "两次密码输入不一致";
+                        }else{
+                            $.ajax({
+                                url: '/register',
+                                method: 'POST',
+                                data: {
+                                    account: this.register_account,
+                                    password: this.register_password,
+                                    email: this.register_email
+                                }
+                            }).done(function (res) {
+                                if (res.success == 0) {
+                                    vApp.$data.notice =  res.msg;
+                                } else {
+                                    window.location.href = res.redirecturl;
+                                }
+                            });
+                        }
+                    }
                 }
-            });
-        }else{
-            $(".notice").text('用户名或密码不许为空.');
+            }
         }
-    });
-
-    $(".to-login").click(function(){
-        $(".login").show();
-        $(".register").hide();
-        $(".underline").css('left', '80px');
-        $(".notice").text('');
-    });
-    $(".to-register").click(function(){
-        $(".register").show();
-        $(".login").hide();
-        $(".underline").css('left', '160px');
-        $(".notice").text('');
     });
 
     particlesJS.load('particles-js', '/javascripts/particles.json', function() {
         console.log('callback - particles.js config loaded');
     });
-});
-
-$(function(){
-    var isLegal = false;
-    $(".register_account").keyup(function(){
-        var account = $(this).val();
-        var regexp = /\W|\_/;
-        if(regexp.test(account)){
-            $(".notice").text("不允许使用空格,下划线等特殊字符为帐号.");
-            isLegal = false;
-        }else{
-            $(".notice").text("");
-            isLegal = true;
-        }
-        if(account.length > 12 || account.length < 6){
-            $(".notice").text("帐号长度应为6-12字符.");
-            isLegal = false;
-        }else{
-            isLegal = true;
-        }
-    });
-
-    $(".register_password_repeat").change(function(){
-        if($(".register_password").val() != $(this).val()){
-            $(".notice").text("两次密码输入不一致.");
-            isLegal = false;
-        }else{
-            $(".notice").text("");
-            isLegal = true;
-        }
-    });
-
-    $(".subRegister").click(function(){
-        var account = $(".register_account").val(),
-            password = $(".register_password").val(),
-            email = $(".register_email").val();
-
-        if(account && password && isLegal) {
-            $.ajax({
-                url: '/register',
-                method: 'POST',
-                data: {
-                    account: account,
-                    password: password,
-                    email: email
-                }
-            }).done(function (res) {
-                if (res.success == 0) {
-                    console.log(res.msg);
-                    $(".notice").text(res.msg);
-                } else {
-                    $(".notice").empty();
-                    window.location.href = res.redirecturl;
-                }
-            });
-        }else{
-            $(".notice").text("用户名或密码不许为空");
-        }
-    });
-
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
-    })
-});
+}

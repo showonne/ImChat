@@ -39,8 +39,12 @@ html, body {
     width: 60px;
     background-color: #5F98C4;
     transition: all .25s ease;
+    &.second{
+      left: 160px;
+    }
   }
 }
+
 
 .register{
   width: 300px;
