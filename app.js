@@ -5,13 +5,13 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
-
+//Routes
 var routes = require('./routes/index');
 var teams = require('./routes/teams');
 var records = require('./routes/records');
 var chating = require('./routes/chating');
 var apis = require('./routes/api');
-
+//Database
 var db = require('./db.js');
 
 var multer = require('multer');
@@ -114,4 +114,5 @@ io.on('connection', function(socket){
     console.log("a user leaved...");
   });
 });
+
 

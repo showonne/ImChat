@@ -8,6 +8,7 @@ import browserSync from 'browser-sync';
 import minifyCss from 'gulp-minify-css';
 import rename from 'gulp-rename';
 import clean from 'gulp-clean';
+import webpack from 'webpack-stream';
 
 gulp.task('clean', () => {
     return gulp.src('./public/stylesheets/*.css')
@@ -27,6 +28,12 @@ gulp.task('minify', ['sass'], () => {
        .pipe(rename({suffix: '.min'}))
        .pipe(gulp.dest('./public/stylesheets/'))
        .pipe(browserSync.reload({stream: true}));
+});
+
+gulp.task('webpack', () => {
+    return gulp.src('./public/javascripts/base.js')
+        .pipe(webpack(require('./webpack.config.babel.js')))
+        .pipe(gulp.dest('./public/dist'));
 });
 
 gulp.task('server', ['nodemon'], () => {
@@ -56,4 +63,6 @@ gulp.task('nodemon', (cb) => {
     });
 });
 
-gulp.task('default', ['minify', 'server']);
+gulp.task('default', ['minify', 'webpack', 'server'], function(){
+    gulp.watch('./public/javascripts/*.js', ['webpack']);
+});

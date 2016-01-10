@@ -62,7 +62,7 @@
                         <template  v-for="record in recordlist">
                             <div class="media">
                                 <div class="media-left media-top">
-                                    <img src="{{ record.photo }}" alt=""/>
+                                    <img :src="record.photo" alt=""/>
                                 </div>
                                 <div class="media-body">
                                     <h4 class="media-heading">{{ record.nickname }}</h4>

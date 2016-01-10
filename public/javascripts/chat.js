@@ -516,6 +516,7 @@ $(function(){
             }).done(function (res) {
                 if (res.success == 1) {
                     notie.alert(1, res.originalName + '上传完成!', 1.5);
+                    vFileBox.$data.files.push({src: res.src, originalName: res.originalName});
                 } else {
                     notie.alert(3, 'unknow error', 1.5);
                 }
