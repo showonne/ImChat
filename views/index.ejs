@@ -16,7 +16,7 @@
         </div>
       </div>
       <div class="login" v-show="selected">
-        <form action="" class="form">
+        <form action="" class="form logon-form">
           <div class="form_item">
             <input type="text" class="login_account" v-model="login_account" placeholder="用户名"/>
           </div>
@@ -33,7 +33,7 @@
       </div>
       <!-- 注册 -->
       <div class="register" v-show="!selected">
-        <form action="" class="form">
+        <form action="" class="form register-form">
           <div class="form_item">
             <input type="text" class="register_account" v-model="register_account" placeholder="用户名" />
           </div>
@@ -57,6 +57,6 @@
     </div>
     <div id="particles-js"></div>
   </body>
-  <script src="/javascripts/particles.js"></script>
+  <script src="/third-part/particles.js"></script>
   <script src="/dist/index.js"></script>
 </html>

@@ -9,7 +9,7 @@ var chatRecord = require('../models/chatRecordModel');
 router.get('/create', utils.checkLogin);
 router.get('/create', function(req, res){
     console.log(req.session.account);
-    res.render('teamscreate',{});
+    res.render('teamscreate');
 });
 
 router.post('/create', function(req, res){

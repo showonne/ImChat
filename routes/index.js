@@ -67,6 +67,7 @@ router.post('/register',function(req, res){
             console.log(err);
           }else{
             req.session.account = account;
+            console.log(req.session.account);
             res.json({redirecturl: '/team/create'});
           }
         });

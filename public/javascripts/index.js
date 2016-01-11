@@ -30,20 +30,21 @@ window.onload = () => {
                 if(this.isEmpty([this.login_account, this.login_password])){
                     this.notice = "账号名或密码不许为空";
                 }else{
-                    $.ajax({
-                        url: '/logon',
+                    fetch('/logon', {
                         method: 'POST',
-                        data: {
+                        credentials: 'include',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
                             account: this.login_account,
                             password: this.login_password
-                        }
-                    }).done(function (res) {
-                        if (res.success == 0) {
-                            vApp.$data.notice = res.msg;
-                        } else {
-                            window.location.href = res.redirecturl;
-                        }
-                    });
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(json => {
+                            json.success == 0 ? vApp.$data.notice = json.msg : window.location.href = json.redirecturl;
+                        });
                 }
             },
             subRegister: function(){
@@ -56,21 +57,20 @@ window.onload = () => {
                         if(this.register_password != this.register_password_repeat){
                             this.notice = "两次密码输入不一致";
                         }else{
-                            $.ajax({
-                                url: '/register',
-                                method: 'POST',
-                                data: {
+                            fetch('/register', {
+                                method: 'post',
+                                credentials: 'include',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
                                     account: this.register_account,
                                     password: this.register_password,
                                     email: this.register_email
-                                }
-                            }).done(function (res) {
-                                if (res.success == 0) {
-                                    vApp.$data.notice =  res.msg;
-                                } else {
-                                    window.location.href = res.redirecturl;
-                                }
-                            });
+                                })
+                            })
+                            .then( res => res.json())
+                            .then( json => { json.success == 0 ? vApp.$data.notice =  json.msg : window.location.href = json.redirecturl;})
                         }
                     }
                 }
@@ -78,5 +78,5 @@ window.onload = () => {
         }
     });
 
-    particlesJS.load('particles-js', '/javascripts/particles.json', () => { console.log('particles is done!') });
+    //particlesJS.load('particles-js', '/third-part/particles.json', () => { console.log('particles is done!') });
 }

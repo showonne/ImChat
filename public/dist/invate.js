@@ -1,76 +1,27 @@
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
+"use strict";
 
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
+$(function () {
+   $(".button").click(function () {
+      var account = $(".account").val(),
+          password = $(".password").val();
 
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId].exports;
+      $.ajax({
+         url: window.location.href,
+         type: 'POST',
+         data: {
+            account: account,
+            password: password
+         }
+      }).done(function (res) {
+         if (res.success == 0) {
+            $(".notice").text(res.msg);
+         } else {
+            window.location.href = res.redirecturl;
+         }
+      });
+   });
 
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
-/******/ 		};
-
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-
-/******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
-
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-
-
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
-/******/ })
-/************************************************************************/
-/******/ ([
-/* 0 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	$(function () {
-	   $(".button").click(function () {
-	      var account = $(".account").val(),
-	          password = $(".password").val();
-
-	      $.ajax({
-	         url: window.location.href,
-	         type: 'POST',
-	         data: {
-	            account: account,
-	            password: password
-	         }
-	      }).done(function (res) {
-	         if (res.success == 0) {
-	            $(".notice").text(res.msg);
-	         } else {
-	            window.location.href = res.redirecturl;
-	         }
-	      });
-	   });
-
-	   particlesJS.load('particles-js', '/javascripts/particles.json', function () {
-	      console.log('callback - particles.js config loaded');
-	   });
-	});
-
-/***/ }
-/******/ ]);
+   particlesJS.load('particles-js', '/javascripts/particles.json', function () {
+      console.log('callback - particles.js config loaded');
+   });
+});

@@ -8,7 +8,8 @@ import browserSync from 'browser-sync';
 import minifyCss from 'gulp-minify-css';
 import rename from 'gulp-rename';
 import clean from 'gulp-clean';
-import webpack from 'webpack-stream';
+import babel from 'gulp-babel';
+import plumber from 'gulp-plumber';
 
 gulp.task('clean', () => {
     return gulp.src('./public/stylesheets/*.css')
@@ -30,10 +31,13 @@ gulp.task('minify', ['sass'], () => {
        .pipe(browserSync.reload({stream: true}));
 });
 
-gulp.task('webpack', () => {
-    return gulp.src('./public/javascripts/base.js')
-        .pipe(webpack(require('./webpack.config.babel.js')))
-        .pipe(gulp.dest('./public/dist'));
+gulp.task('es6', () => {
+    return gulp.src('./public/javascripts/*.js')
+        .pipe(plumber())
+        .pipe(babel({
+            presets: ['es2015']
+        }))
+        .pipe(gulp.dest('./public/dist/'));
 });
 
 gulp.task('server', ['nodemon'], () => {
@@ -63,6 +67,6 @@ gulp.task('nodemon', (cb) => {
     });
 });
 
-gulp.task('default', ['minify', 'webpack', 'server'], function(){
-    gulp.watch('./public/javascripts/*.js', ['webpack']);
+gulp.task('default', ['minify', 'es6', 'server'], function(){
+    gulp.watch('./public/javascripts/*.js', ['es6']);
 });
