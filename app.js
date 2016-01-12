@@ -24,9 +24,9 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(cookieParser());
 app.use(session({
   path: '/',
   secret: 'showonne',
@@ -39,6 +39,10 @@ app.use(multer({
   dest: './public/upload'
 }));
 
+app.all('*', function(req, res, next){
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
+});
 app.use('/', routes);
 app.use('/record', records);
 app.use('/team', teams);
