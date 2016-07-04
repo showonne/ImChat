@@ -17,7 +17,7 @@ gulp.task('clean', () => {
 });
 
 gulp.task('less',['clean'], () => {
-    gulp.src('./public/less/*.less')
+    return gulp.src('./public/less/*.less')
         .pipe(less())
         .pipe(autoprefixer())
         .pipe(gulp.dest('./public/stylesheets/'))
