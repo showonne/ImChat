@@ -1,5 +1,5 @@
 @import "common";
-$unit: 750/10rem;
+@unit: 750/10rem;
 
 html, body{
   height: 100%;
@@ -10,8 +10,8 @@ html, body{
   position: fixed;
   z-index: 999;
   width: 100%;
-  height: 60/$unit;
-  background-color: $cyan-normal;
+  height: 60/@unit;
+  background-color: @cyan-normal;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -22,7 +22,7 @@ html, body{
     width: 40px;
     cursor: pointer;
     position: absolute;
-    left: 10/$unit;
+    left: 10/@unit;
     top: 33%;
     text-decoration: none;
     img{
@@ -31,7 +31,7 @@ html, body{
   }
 }
 .container{
-  padding-top: 60/$unit;
+  padding-top: 60/@unit;
   padding-bottom: 30px;
   .row{
     margin-top: 40px;

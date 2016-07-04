@@ -1,7 +1,7 @@
 'use strict';
 
 import gulp from 'gulp';
-import sass from 'gulp-sass';
+import less from 'gulp-less';
 import autoprefixer from 'gulp-autoprefixer';
 import nodemon from 'gulp-nodemon';
 import browserSync from 'browser-sync';
@@ -12,27 +12,27 @@ import babel from 'gulp-babel';
 import plumber from 'gulp-plumber';
 
 gulp.task('clean', () => {
-    return gulp.src('./public/stylesheets/*.css')
-               .pipe(clean());
+    gulp.src('./public/stylesheets/*.css')
+        .pipe(clean());
 });
 
-gulp.task('sass',['clean'], () => {
-    return gulp.src('./public/sass/*.scss')
-               .pipe(sass().on('error', sass.logError))
-               .pipe(autoprefixer())
-               .pipe(gulp.dest('./public/stylesheets/'))
+gulp.task('less',['clean'], () => {
+    gulp.src('./public/less/*.less')
+        .pipe(less())
+        .pipe(autoprefixer())
+        .pipe(gulp.dest('./public/stylesheets/'))
 });
 
-gulp.task('minify', ['sass'], () => {
+gulp.task('minify', ['less'], () => {
    gulp.src('./public/stylesheets/*.css')
        .pipe(minifyCss())
        .pipe(rename({suffix: '.min'}))
        .pipe(gulp.dest('./public/stylesheets/'))
-       .pipe(browserSync.reload({stream: true}));
+       .pipe(browserSync.reload({stream: true}))
 });
 
 gulp.task('es6', () => {
-    return gulp.src('./public/javascripts/*.js')
+    return gulp.src(['./public/javascripts/*.js', './setting.js'])
         .pipe(plumber())
         .pipe(babel({
             presets: ['es2015']
@@ -46,7 +46,7 @@ gulp.task('server', ['nodemon'], () => {
         files: ['public/stylesheets/*.css'],
         port: 4000
     });
-    gulp.watch('./public/sass/*.scss', ['minify']);
+    gulp.watch('./public/less/*.less', ['minify']);
     gulp.watch('./views/*.ejs').on('change', browserSync.reload);
 });
 

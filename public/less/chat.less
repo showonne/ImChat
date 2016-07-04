@@ -1,5 +1,5 @@
 @import "common";
-$unit: 750/10rem;
+@unit: 750/10rem;
 
 html,body{
   height: 100%;
@@ -14,9 +14,9 @@ ul{
   position: relative;
   left: 150px;
   top: -2px;
-  background-color: $badge-alert;
+  background-color: @badge-alert;
   &.return{
-    background-color: $badge-alert;
+    background-color: @badge-alert;
     left: 5px;
   }
 }
@@ -30,13 +30,13 @@ ul{
 
   aside{
     flex: 160;
-    background-color: $cyan-normal;
+    background-color: @cyan-normal;
     position: relative;
 
     .teamManage{
-      background-color: $cyan-light;
-      padding-top: 12/$unit;
-      padding-bottom: 6/$unit;
+      background-color: @cyan-light;
+      padding-top: 12/@unit;
+      padding-bottom: 6/@unit;
       .teamBtn{
         cursor: pointer;
         color: #fff;
@@ -52,7 +52,7 @@ ul{
     .memberManage{
       .memberTitle{
         padding-top: 10px;
-        height: 30/$unit;
+        height: 30/@unit;
         .title{
           line-height: 2;
           display: inline-block;
@@ -68,7 +68,7 @@ ul{
         li{
           display: block;
           width: 100%;
-          height: 20/$unit;
+          height: 20/@unit;
           a{
             line-height: 1.5;
             display: block;
@@ -76,9 +76,9 @@ ul{
             text-decoration: none;
             color: #fff;
             text-align: left;
-            padding-left: 20/$unit;
+            padding-left: 20/@unit;
             &:hover{
-              background-color: $cyan-hover;
+              background-color: @cyan-hover;
             }
           }
         }
@@ -93,12 +93,12 @@ ul{
         bottom: 0;
         width: 80%;
         border-bottom: 1px solid #fff;
-        right: 12/$unit;
+        right: 12/@unit;
         z-index: -1;
       }
       .chatTitle{
         padding-top: 10px;
-        height: 30/$unit;
+        height: 30/@unit;
         display: flex;
         flex-flow: row;
         .title{
@@ -110,20 +110,20 @@ ul{
         }
         .icon{
           display: inline-block;
-          height: 14/$unit;
-          width: 14/$unit;
+          height: 14/@unit;
+          width: 14/@unit;
           img{
             cursor: pointer;
             display: inline-block;
             max-width: 100%;
             position: relative;
-            top: -47/$unit;
+            top: -47/@unit;
           }
         }
       }
       .chatList{
         list-style: none;
-        height: 150/$unit;
+        height: 150/@unit;
         overflow: scroll;
         li{
           display: block;
@@ -131,7 +131,7 @@ ul{
           display: flex;
           align-items: center;
           &:hover{
-            background-color: $cyan-hover;
+            background-color: @cyan-hover;
             .cancle{
               visibility: visible;
             }
@@ -144,7 +144,7 @@ ul{
             text-decoration: none;
             color: #fff;
             text-align: left;
-            padding-left: 20/$unit;
+            padding-left: 20/@unit;
             &.active{
               background-color: #093E72;
 
@@ -222,8 +222,8 @@ ul{
     flex: 590;
     height: 100%;
     .header{
-      padding-top: 10/$unit;
-      padding-bottom: 1/$unit;
+      padding-top: 10/@unit;
+      padding-bottom: 1/@unit;
       box-sizing: border-box;
       box-shadow: 0 -2px 4px 0 rgba(0,0,0,.1);
       border-bottom: 1px solid #ccc;
@@ -239,7 +239,7 @@ ul{
         font-size: 24px;
         color: #383838;
         font-weight: 800;
-        padding-left: 150/$unit;
+        padding-left: 150/@unit;
       }
       .todoToggle, .fileToggle{
         float: right;
@@ -296,9 +296,9 @@ ul{
       span{
         font-size: 14px;
         position: absolute;
-        top: 76/$unit;
+        top: 76/@unit;
         right: 0;
-        margin-right: 10/$unit;
+        margin-right: 10/@unit;
         color: #C1C1C1;
       }
     }
@@ -313,12 +313,12 @@ ul{
   color: #383838;
   font-size: 14px;
   position: absolute;
-  left: 80/$unit;
-  top: 200/$unit;
+  left: 80/@unit;
+  top: 200/@unit;
   background-color: #fff;
-  width: 140/$unit;
-  height: 150/$unit;
-  min-height: 80/$unit;
+  width: 140/@unit;
+  height: 150/@unit;
+  min-height: 80/@unit;
   border: 1px solid #ccc;
   border-radius: 4px;
   box-shadow: 1px 0 1px 1px #ccc;
@@ -441,7 +441,7 @@ ul{
 
 .chatBox{
   display: flex;
-  height: 380/$unit;
+  height: 380/@unit;
 }
 
 .todoBox{
@@ -491,7 +491,7 @@ ul{
     }
     div{
       cursor: pointer;
-      color: $cyan-normal
+      color: @cyan-normal
     }
   }
 }
@@ -547,7 +547,7 @@ input[type="checkbox"]:checked + label::before{
 }
 
 .download{
-  color: $cyan-normal;
+  color: @cyan-normal;
   cursor: pointer;
   width: 200px;
   height: 100%;

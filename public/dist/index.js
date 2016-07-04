@@ -110,5 +110,7 @@ window.onload = function () {
 
     var vapp = new vApp();
 
-    //particlesJS.load('particles-js', '/third-part/particles.json', () => { console.log('particles is done!') });
+    particlesJS.load('particles-js', '/third-part/particles.json', function () {
+        console.log('particles is done!');
+    });
 };

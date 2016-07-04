@@ -1,5 +1,5 @@
 @import "common";
-$unit: 750/10rem;
+@unit: 750/10rem;
 
 html, body{
   height: 100%;
@@ -47,26 +47,24 @@ body{
     align-items: center;
     .notice{
       display: block;
-      width: 200/$unit;
-      height: 15/$unit;
+      width: 200/@unit;
+      height: 15/@unit;
       font-size: 14px;
       line-height: 1.7;
       color: red;
-      margin-top: 5/$unit;
+      margin-top: 5/@unit;
     }
     .password{
-      //width: 200/$unit;
-      //height: 20/$unit;
-      margin-top: 15/$unit;
+      margin-top: 15/@unit;
     }
     .password_repeat{
-      margin-top: 15/$unit;
+      margin-top: 15/@unit;
     }
   }
   .btnGroup{
     padding-top: -40px;
     .register{
-      width: 200/$unit;
+      width: 200/@unit;
     }
   }
 }
