@@ -90,9 +90,9 @@ window.onload = function () {
                                     'Content-Type': 'application/json'
                                 },
                                 body: JSON.stringify({
-                                    account: this.register_account,
-                                    password: this.register_password,
-                                    email: this.register_email
+                                    account: vapp._data.register_account,
+                                    password: vapp._data.register_password,
+                                    email: vapp._data.register_email
                                 })
                             }).then(function (res) {
                                 return res.json();
@@ -110,7 +110,5 @@ window.onload = function () {
 
     var vapp = new vApp();
 
-    particlesJS.load('particles-js', '/third-part/particles.json', function () {
-        console.log('particles is done!');
-    });
+    // particlesJS.load('particles-js', '/third-part/particles.json', () => { console.log('particles is done!') });
 };

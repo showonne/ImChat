@@ -11,10 +11,10 @@ var records = require('./routes/records');
 var chating = require('./routes/chating');
 var apis = require('./routes/api');
 //Database
-var db = require('./db.js');
+var db = require('./db.js')
 
-var multer = require('multer');
-var app = express();
+var multer = require('multer')
+var app = express()
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
