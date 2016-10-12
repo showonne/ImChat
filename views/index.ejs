@@ -24,7 +24,7 @@
             <input type="password" class="login_password" v-model="login_password" placeholder="密码"/>
           </div>
           <div class="notice_wrapper">
-            <span class="notice">{{ notice }}</span>
+            <span class="notice" v-cloak>{{ notice }}</span>
           </div>
           <div class="button_wrapper">
             <input type="button" value="确认" @click="subLogin" />
@@ -47,7 +47,7 @@
             <input type="password" class="register_password_repeat" placeholder="确认密码" v-model="register_password_repeat"/>
           </div>
           <div class="notice_wrapper">
-            <span class="notice">{{ notice }}</span>
+            <span class="notice" v-cloak>{{ notice }}</span>
           </div>
           <div class="button_wrapper">
             <input type="button" @click="subRegister" value="确认"/>

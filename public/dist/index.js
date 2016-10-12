@@ -28,7 +28,7 @@ window.onload = function () {
                     register_password_repeat: ''
                 }
             };
-            return _possibleConstructorReturn(this, Object.getPrototypeOf(vApp).call(this, props));
+            return _possibleConstructorReturn(this, (vApp.__proto__ || Object.getPrototypeOf(vApp)).call(this, props));
         }
 
         _createClass(vApp, [{
@@ -110,5 +110,7 @@ window.onload = function () {
 
     var vapp = new vApp();
 
-    // particlesJS.load('particles-js', '/third-part/particles.json', () => { console.log('particles is done!') });
+    particlesJS.load('particles-js', '/third-part/particles.json', function () {
+        console.log('particles is done!');
+    });
 };

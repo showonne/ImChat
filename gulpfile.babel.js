@@ -12,7 +12,7 @@ import babel from 'gulp-babel';
 import plumber from 'gulp-plumber';
 
 gulp.task('clean', () => {
-    gulp.src('./public/stylesheets/*.css')
+    return gulp.src('./public/stylesheets/*.css')
         .pipe(clean());
 });
 
