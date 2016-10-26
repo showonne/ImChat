@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat</title>
+    <% include dependence.ejs %>
+    <link rel="stylesheet" href="/stylesheets/chat.min.css"/>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/third-part/lodash.min.js"></script>
+    <script src="/third-part/marked.js"></script>
+</head>
+<body id="notiebody" scroll="auto">
+    <div class="container1">
+        <aside>
+            <div class="teamManage">
+                <div class="teamBtn" data-toggle="modal" data-target="#teamList" data-teamid="<%= currentteam.id %>"><%= currentteam.teamname%>&nbsp;&nbsp;</div>
+            </div>
+            <div class="memberManage">
+                <div class="memberTitle">
+                    <span class="title">其他成员</span>
+                </div>
+                <ul class="memberList" id="vMemberList">
+                    <li v-for="member in members" class="listitem">
+                        <a href="javascript:void(0);" class="privateChat" data-privateid="{{ member.id }}" @click="createPrivateChat">{{ member.nickname }}</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="more" data-toggle="modal" data-target="#invate">邀请更多成员...</div>
+            <!-- 私聊列表 -->
+            <div class="chatManage">
+                <div class="chatTitle">
+                    <span class="title">》私聊列表</span>
+                </div>
+                <ul class="chatList" id="vChatList">
+                    <template v-for="item in lists">
+                        <li class="listitem" data-privateid="{{ item.id }}" @click="chatTo">
+                            <span class="badge private">{{ item.number == 0 ? "" : item.number }}</span>
+                            <a href="javascrupt: void(0);" @click="chatTo" data-privateid="{{ item.id }}">{{ item.nickname }}</a>
+                            <span class="cancle" data-id="{{ item.id }}" @click="dismiss">x</span>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+            <div class="settings">
+                <span class="photo">
+                    <img src="<%= account.photo %>">
+                </span>
+                <span class="nickname" data-accountid="<%= account.id %>" data-photo="<%= account.photo %>"><%= account.nickname %></span>
+                <span class="up" data-toggle="modal" data-target="#upMenu">^</span>
+            </div>
+        </aside>
+        <div class="main">
+            <div class="header">
+                <span class="returnGroupChat btn btn-default">返回群聊<span class="badge return"></span></span>
+                <span class="topicName">群聊</span>
+                <span class="fileToggle"><img src="/images/iconfont-fujianjia.png" alt=""/></span>
+                <span class="todoToggle"><img src="/images/iconfont-listtodo.png"></span>
+            </div>
+            <div class="chatBox">
+                <div id="iscroll">
+                    <div class="messageBox" id="vRecord">
+                        <template  v-for="record in recordlist">
+                            <div class="media">
+                                <div class="media-left media-top">
+                                    <img :src="record.photo" alt=""/>
+                                </div>
+                                <div class="media-body">
+                                    <h4 class="media-heading">{{ record.nickname }}</h4>
+                                    {{{ record.msg | parseImg }}}
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+                <!-- 右侧弹出框 -->
+                <div class="todoBox">
+                    <div class="todoHeader">
+                        <h4 class="todoTitle">待办事项小记</h4>
+                        <button @click="delCompleted" class="btn btn-primary">删除已完成任务</button>
+                    </div>
+                    <ul>
+                        <li v-for="todo in todos" >
+                            <div class="todoItem" >
+                                <input type="checkbox" id="{{ todo.id }}" @click= "todo.done = !todo.done" />
+                                <label for="{{ todo.id }}" >{{ todo.task }}</label>
+                            </div>
+                        </li>
+                    </ul>
+                    <input class="newTodo" type="text" @keyup.13="addTodo" placeholder="又有事情做了？">
+                </div>
+                <div class="fileBox" id="vFileBox">
+                    <h4 class="fileTitle">群组文件</h4>
+                    <ul class="filesGroup">
+                        <li v-for="file in files">
+                            <a href="javascript: void(0);" data-src="{{ file.src }}" @click="download">{{ file.originalName }}</a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- end -->
+            </div>
+            <div class="inputBox">
+                <div class="toolbar">
+                    <a href="javascript:void(0);" class="emoji"><img src="/images/iconfont-biaoqing.png" alt=""/></a>
+                    <a href="javascript:void(0);" class="image inputContainer">
+                        <img src="/images/iconfont-tupian.png" alt=""/>
+                        <input type="file" class="image_file"/>
+                    </a>
+                    <a href="javascript:void(0);" class="file inputContainer">
+                        <img src="/images/iconfont-files.png" alt=""/>
+                        <input type="file" class="file_file"/>
+                    </a>
+                </div>
+                <textarea name="inputContent" id="inputContent" placeholder="说点什么呢..." spellcheck="false"></textarea>
+                <span>输入Shift + Enter 发送</span>
+            </div>
+        </div>
+        <div class="teamlist modal fade" id="teamList">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <div class="teamtitle">我的团队</div>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="list-group" id="vTeamList">
+                            <li v-for="team in teamlist" class="teamitem list-group-item">
+                                <a href="javascript: void(0);" data-teamid="{{ team.id }}" @click="chTeam">{{ team.teamname }}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="newteam btn btn-primary" data-toggle="modal" data-target="#addTeam">新建团队</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="invate" class="modal fade" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4>您的邀请链接已生成</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h4 class="invate_link"></h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="addTeam" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="addTitle">添加团队</div>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" id="n_teamname" class="form-control" placeholder="请输入团队名"/>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="cancleteam" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button id="addTeamBtn" class="btn btn-primary">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="upMenu">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <ul class="list-group">
+                            <li><a class="list-group-item" href="/setting/personal" id="personalsetting">个人设置</a></li>
+                            <li><a class="list-group-item" href="/logout" id="logout">退出登录</a></li>
+                            <li><a class="list-group-item" href="javascript:void(0);" id="canclesetting" data-dismiss="modal">取消</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="emojiBox" style="display: none">
+            <a href="javascript:void(0);" class="emojiItem" data-mean="aswsome"><img src="/emoji/aswsome.gif"/></a>
+            <a href="javascript:void(0);" class="emojiItem" data-mean="badluck"><img src="/emoji/badluck.gif"/></a>
+            <a href="javascript:void(0);" class="emojiItem" data-mean="bye"><img src="/emoji/bye.gif"/></a>
+            <a href="javascript:void(0);" class="emojiItem" data-mean="contempt"><img src="/emoji/contempt.gif"/></a>
+            <a href="javascript:void(0);" class="emojiItem" data-mean="cute"><img src="/emoji/cute.gif"/></a>
+            <a href="javascript:void(0);" class="emojiItem" data-mean="daze"><img src="/emoji/daze.gif"/></a>
+            <a href="javascript:void(0);" class="emojiItem" data-mean="dizzy"><img src="/emoji/dizzy.gif"/></a>
+            <a href="javascript:void(0);" class="emojiItem" data-mean="doubt"><img src="/emoji/doubt.gif"/></a>
+            <a href="javascript:void(0);" class="emojiItem" data-mean="excited"><img src="/emoji/excited.gif"/></a>
+            <a href="javascript:void(0);" class="emojiItem" data-mean="fil"><img src="/emoji/fil.gif"/></a>
+            <a href="javascript:void(0);" class="emojiItem" data-mean="good"><img src="/emoji/good.gif"/></a>
+            <a href="javascript:void(0);" class="emojiItem" data-mean="grief"><img src="/emoji/grief.gif"/></a>
+            <a href="javascript:void(0);" class="emojiItem" data-mean="grievance"><img src="/emoji/grievance.gif"/></a>
+            <a href="javascript:void(0);" class="emojiItem" data-mean="grimace"><img src="/emoji/grimace.gif"/></a>
+            <a href="javascript:void(0);" class="emojiItem" data-mean="guise"><img src="/emoji/guise.gif"/></a>
+            <a href="javascript:void(0);" class="emojiItem" data-mean="indecent"><img src="/emoji/indecent.gif"/></a>
+            <a href="javascript:void(0);" class="emojiItem" data-mean="jiong"><img src="/emoji/jiong.gif"/></a>
+            <a href="javascript:void(0);" class="emojiItem" data-mean="kiss"><img src="/emoji/kiss.gif"/></a>
+            <a href="javascript:void(0);" class="emojiItem" data-mean="laugh"><img src="/emoji/laugh.gif"/></a>
+            <a href="javascript:void(0);" class="emojiItem" data-mean="laughing"><img src="/emoji/laughing.gif"/></a>
+            <a href="javascript:void(0);" class="emojiItem" data-mean="lovely"><img src="/emoji/lovely.gif"/></a>
+            <a href="javascript:void(0);" class="emojiItem" data-mean="moving"><img src="/emoji/moving.gif"/></a>
+            <a href="javascript:void(0);" class="emojiItem" data-mean="nosebleed"><img src="/emoji/nosebleed.gif"/></a>
+            <a href="javascript:void(0);" class="emojiItem" data-mean="rage"><img src="/emoji/rage.gif"/></a>
+            <a href="javascript:void(0);" class="emojiItem" data-mean="revel"><img src="/emoji/revel.gif"/></a>
+            <a href="javascript:void(0);" class="emojiItem" data-mean="scare"><img src="/emoji/scare.gif"/></a>
+            <a href="javascript:void(0);" class="emojiItem" data-mean="shy"><img src="/emoji/shy.gif"/></a>
+            <a href="javascript:void(0);" class="emojiItem" data-mean="sleep"><img src="/emoji/sleep.gif"/></a>
+            <a href="javascript:void(0);" class="emojiItem" data-mean="snicker"><img src="/emoji/snicker.gif"/></a>
+            <a href="javascript:void(0);" class="emojiItem" data-mean="sorry"><img src="/emoji/sorry.gif"/></a>
+        </div>
+    </div>
+    <script src="/notie/notie.js"></script>
+    <script src="/javascripts/chat.js"></script>
+</body>
+</html>

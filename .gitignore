@@ -1,0 +1,14 @@
+# OS X
+.DS_Store*
+
+# npm
+node_modules
+
+# default
+public/stylesheets/*
+public/jquery
+public/bootstrap
+public/upload
+.idea/*
+public/.sass-cache/
+*.log

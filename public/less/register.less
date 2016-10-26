@@ -1,0 +1,83 @@
+@import "common";
+@unit: 750/10rem;
+
+html, body{
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center
+}
+
+body{
+  background-image: url('/images/bgImg2.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.wrapper{
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  position: relative;
+  border-radius: 8px;
+  padding: 20px 0;
+  background-color: hsla(0, 0%, 100%, .3);
+
+  &::before{
+    z-index: -1;
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    filter: blur(10px);
+  }
+  .icon{
+    margin-bottom: 20px;
+    img{
+      display: inline-block;
+      margin: 0 auto;
+    }
+  }
+  .inputBox{
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    .notice{
+      display: block;
+      width: 200/@unit;
+      height: 15/@unit;
+      font-size: 14px;
+      line-height: 1.7;
+      color: red;
+      margin-top: 5/@unit;
+    }
+    .password{
+      margin-top: 15/@unit;
+    }
+    .password_repeat{
+      margin-top: 15/@unit;
+    }
+  }
+  .btnGroup{
+    padding-top: -40px;
+    .register{
+      width: 200/@unit;
+    }
+  }
+}
+
+@media (max-width: 1280px) {
+  .wrapper {
+    width: 35%;
+  }
+}
+
+@media (max-width: 767px){
+  .wrapper{
+    width: 75%;
+    padding: 10px 0;
+  }
+}

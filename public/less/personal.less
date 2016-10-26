@@ -1,0 +1,60 @@
+@import "common";
+@unit: 750/10rem;
+
+html, body{
+  height: 100%;
+  width: 100%;
+}
+
+.header{
+  position: fixed;
+  z-index: 999;
+  width: 100%;
+  height: 60/@unit;
+  background-color: @cyan-normal;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color :#fff;
+  .return{
+    display: block;
+    height: 40px;
+    width: 40px;
+    cursor: pointer;
+    position: absolute;
+    left: 10/@unit;
+    top: 33%;
+    text-decoration: none;
+    img{
+      max-width: 100%;
+    }
+  }
+}
+.container{
+  padding-top: 60/@unit;
+  padding-bottom: 30px;
+  .row{
+    margin-top: 40px;
+  }
+}
+
+.title{
+  border-bottom: 1px solid #000;
+  padding-bottom: 10px;
+}
+
+.photo{
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+}
+
+
+#editName, #editEmail,#editTelephone,#editPosition{
+  width: 40%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
